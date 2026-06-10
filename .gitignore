@@ -1,0 +1,11 @@
+# Only track index.html and screenshots
+*.pdf
+*.docx
+*.xlsx
+*.md
+.DS_Store
+portfolio.html
+Projects/.DS_Store
+Projects/life-projects.md
+Treats Requirement.pdf
+Itaewon Requirement.pdf
