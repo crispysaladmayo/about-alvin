@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alvin Hiero · Head of Product</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+
+/* ================================================================
+   TOKENS
+================================================================ */
+:root {
+  --bg:       #050C1A;
+  --surface:  #08101F;
+  --surface2: #0C1828;
+  --border:   rgba(46,100,220,.18);
+  --borderhi: rgba(91,159,255,.35);
+  --blue:     #2A64DC;
+  --blueh:    #5B9FFF;
+  --splash:   #1040AA;
+  --gold:     #C9A227;
+  --text:     #E2E8F4;
+  --muted:    #7888A8;
+  --dim:      #2E4060;
+  /* Water/slush easings */
+  --surge:    cubic-bezier(0.42,0,0.1,1);      /* water rushing — builds weight */
+  --flow:     cubic-bezier(0.25,0.8,0.25,1);   /* water flowing out — smooth */
+  --slosh:    cubic-bezier(0.34,1.45,0.64,1);  /* sloshing — slight overshoot */
+  --wobble:   cubic-bezier(0.34,1.6,0.64,1);   /* slushy wobble — bigger overshoot */
+  /* keep old aliases for backwards compat */
+  --snap:     cubic-bezier(0.34,1.45,0.64,1);
+  --hard:     cubic-bezier(0.42,0,0.1,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6}
+h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:.04em}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--blue)}
+
+/* ================================================================
+   PAGE-LOAD SPLASH
+================================================================ */
+#splash{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(155deg,#050E40 0%,#0D3899 35%,#0A78CC 70%,#05B4D4 100%);
+  transform:translateX(0);
+  animation:splash-exit .65s var(--flow) .35s both;
+  pointer-events:none;
+}
+/* Frosted leading edge on splash */
+#splash::after{
+  content:'';position:absolute;top:0;right:-1px;bottom:0;width:6px;
+  background:linear-gradient(180deg,#50C8FF,var(--blueh),#30A8FF);
+  box-shadow:0 0 28px 4px rgba(91,200,255,.6);
+  filter:blur(1px);
+}
+/* THE CRITICAL KEYFRAME — exits right with a slight vertical slosh */
+@keyframes splash-exit{
+  0%  { transform: translateX(0)   scaleY(1);    }
+  65% { transform: translateX(75%) scaleY(1.02); }  /* stretch = slushy mass */
+  100%{ transform: translateX(102%) scaleY(1);   }
+}
+
+/* ================================================================
+   TRANSITION PANEL — P3R water surge
+   Open:  enters from BOTTOM (↑), exits to RIGHT (→)
+   Close: enters from LEFT  (→), exits to BOTTOM (↓)
+================================================================ */
+#tp{
+  position:fixed;inset:0;z-index:800;
+  /* Deep blue → water blue → cyan — like P3R ice/water */
+  background:linear-gradient(155deg,#040D40 0%,#0D38B8 35%,#0A70C8 65%,#08AAD8 100%);
+  transform:translateY(100%);
+  pointer-events:none;
+  will-change:transform;
+  backdrop-filter:blur(2px);          /* frosted depth */
+}
+/* Frosted leading edge glow */
+#tp::after{
+  content:'';position:absolute;
+  background:linear-gradient(90deg,transparent,rgba(91,200,255,.4),rgba(180,240,255,.7));
+  filter:blur(2px);
+}
+#tp.phase-right::after{top:0;right:-2px;bottom:0;width:12px}
+#tp.phase-bottom::after{bottom:-2px;left:0;right:0;height:12px;
+  background:linear-gradient(0deg,transparent,rgba(91,200,255,.4),rgba(180,240,255,.7))}
+
+/* ================================================================
+   BURST RING — appears at click origin, expands on transition
+================================================================ */
+#burst{
+  position:fixed;z-index:801;
+  width:6px;height:6px;border-radius:50%;
+  border:2px solid var(--blueh);
+  box-shadow:0 0 12px var(--blueh);
+  transform:scale(1);opacity:0;
+  pointer-events:none;
+  margin:-3px 0 0 -3px;
+}
+#burst.fire{animation:burst-expand .35s ease-out forwards}
+@keyframes burst-expand{
+  0%  {transform:scale(1);opacity:1}
+  100%{transform:scale(120);opacity:0}
+}
+
+/* ================================================================
+   TOP NAV
+================================================================ */
+#nav{
+  position:fixed;top:0;left:0;right:0;height:56px;z-index:700;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;
+  border-bottom:1px solid var(--border);
+  background:rgba(5,12,26,.94);
+  backdrop-filter:blur(12px);
+}
+.nav-logo{
+  font-family:'Rajdhani',sans-serif;
+  font-size:18px;font-weight:700;letter-spacing:.16em;
+  color:var(--text);text-decoration:none;cursor:pointer;
+}
+.nav-logo em{color:var(--blueh);font-style:normal}
+.nav-sep{width:1px;height:16px;background:var(--dim);margin:0 10px}
+.nav-sub{
+  font-family:'Rajdhani',sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);
+}
+.nav-logo-wrap{display:flex;align-items:center}
+
+#nav-back{
+  display:none;align-items:center;gap:8px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  transition:color .15s;padding:0;
+}
+#nav-back:hover{color:var(--text)}
+#nav-back .arr{font-size:14px;transition:transform .15s}
+#nav-back:hover .arr{transform:translateX(-3px)}
+
+#nav-section{
+  font-family:'Rajdhani',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--blueh);display:none;
+}
+
+/* ================================================================
+   MAIN PAGE
+================================================================ */
+#main-page{
+  position:fixed;inset:0;top:56px;
+  display:grid;
+  grid-template-columns:1fr 380px;
+  overflow:hidden;
+}
+@media(max-width:900px){#main-page{grid-template-columns:1fr}}
+
+/* Left column — hero + about — fits in one viewport */
+.main-left{
+  padding:28px 44px 24px 44px;
+  overflow:hidden;                /* no scroll — everything must fit */
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+  border-right:1px solid var(--border);
+  height:100%;
+}
+
+/* Decorative background: rotating arcana ring */
+.arcana-bg{
+  position:absolute;right:-80px;bottom:-80px;
+  width:520px;height:520px;border-radius:50%;
+  border:1px solid rgba(91,159,255,.04);
+  pointer-events:none;
+  animation:slow-rot 30s linear infinite;
+}
+.arcana-bg::before{
+  content:'';position:absolute;inset:20px;border-radius:50%;
+  border:1px solid rgba(201,162,39,.03);
+  animation:slow-rot 20s linear infinite reverse;
+}
+.arcana-bg::after{
+  content:'';position:absolute;inset:60px;border-radius:50%;
+  border:1px dashed rgba(91,159,255,.03);
+}
+@keyframes slow-rot{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* Bubbles */
+.bubbles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.bub{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(91,159,255,.1);
+  animation:bub-rise linear infinite;
+}
+/* Sinusoidal drift — organic water-bubble movement */
+@keyframes bub-rise{
+  0%  {transform:translateY(0)    translateX(0)   scale(1);    opacity:0}
+  8%  {opacity:.85}
+  20% {transform:translateY(-20vh) translateX(9px)  scale(1.04)}
+  38% {transform:translateY(-38vh) translateX(-8px) scale(0.97)}
+  55% {transform:translateY(-55vh) translateX(11px) scale(1.05)}
+  72% {transform:translateY(-72vh) translateX(-6px) scale(0.98)}
+  88% {opacity:.5;transform:translateY(-88vh) translateX(7px)  scale(1)}
+  100%{transform:translateY(-108vh) translateX(-3px) scale(1); opacity:0}
+}
+
+/* Hero text — lift-from-mask animation */
+.mask{overflow:hidden}
+.lift{
+  display:block;transform:translateY(115%);
+  /* slosh = text overshoots slightly then settles, like water sloshing into place */
+  transition:transform .42s var(--slosh);
+}
+.lift.in{transform:translateY(0)}
+
+.hero-eyebrow{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.pulse{
+  width:7px;height:7px;border-radius:50%;background:var(--blueh);
+  animation:blink 2.2s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes blink{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(91,159,255,.4)}
+  50%    {opacity:.4;box-shadow:0 0 0 6px rgba(91,159,255,0)}
+}
+.eyebrow-text{
+  font-family:'Rajdhani',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--blueh);
+}
+
+.hero-name{
+  font-size:clamp(38px,5.5vw,72px);font-weight:700;
+  text-transform:uppercase;line-height:.9;margin-bottom:12px;
+}
+.hero-name .first{color:var(--text)}
+.hero-name .last {color:var(--blueh)}
+
+.hero-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(13px,1.6vw,17px);font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.hero-title strong{color:var(--gold);font-weight:600}
+
+.about-text{
+  font-size:13px;color:var(--muted);line-height:1.65;
+  max-width:520px;margin-bottom:20px;
+}
+.about-text strong{color:var(--text);font-weight:500}
+
+/* Stats row */
+.stats-row{display:flex;align-items:center;gap:0;margin-bottom:0}
+.stat-b{padding:0 22px}
+.stat-b:first-child{padding-left:0}
+.stat-val{
+  font-family:'Rajdhani',sans-serif;
+  font-size:34px;font-weight:700;color:var(--blueh);line-height:1;
+}
+.stat-lbl{
+  font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin-top:2px;
+}
+.stat-sep{width:1px;height:38px;background:var(--borderhi)}
+
+/* Right column — P3R stacked menu */
+.main-right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:28px 36px 28px 32px;
+  position:relative;overflow:hidden;
+  height:100%;
+}
+
+/* Background gradient for right column */
+.main-right::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent,rgba(42,100,220,.03),transparent);
+  pointer-events:none;
+}
+
+.menu-label{
+  font-family:'Rajdhani',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:28px;padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+
+/* P3R menu items */
+.p3-item{
+  display:flex;align-items:center;gap:0;
+  padding:10px 0;
+  border-bottom:1px solid rgba(46,100,220,.08);
+  cursor:pointer;
+  position:relative;overflow:hidden;
+  user-select:none;
+}
+.p3-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:0;background:rgba(42,100,220,.07);
+  transition:width .2s var(--snap);
+}
+.p3-item:hover::before{width:100%}
+
+.p3-tri{
+  font-size:9px;color:var(--gold);
+  opacity:0;transform:translateX(-6px);
+  transition:opacity .15s,transform .15s;
+  flex-shrink:0;margin-right:0;width:16px;
+}
+.p3-label{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(24px,2.8vw,34px);font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);
+  transition:color .15s,transform .15s;
+}
+.p3-sub{
+  font-family:'Rajdhani',sans-serif;
+  font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);margin-left:auto;
+  transition:color .15s;
+}
+
+.p3-item:hover .p3-tri    {opacity:1;transform:translateX(0)}
+/* Slosh — label overshoots then settles, like water pushed by a wave */
+.p3-item:hover .p3-label  {
+  color:var(--text);
+  transform:translateX(4px);
+  transition:color .15s, transform .35s var(--slosh);
+}
+.p3-item:hover .p3-sub    {color:var(--muted)}
+
+/* Scanline on item hover — P3R cursor */
+.p3-item::after{
+  content:'';position:absolute;left:0;right:0;top:0;
+  height:1px;background:var(--blueh);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .2s var(--snap);opacity:.5;
+}
+.p3-item:hover::after{transform:scaleX(1)}
+
+/* Mobile: show menu below hero */
+@media(max-width:900px){
+  html,body{overflow:auto}
+  #main-page{grid-template-columns:1fr;overflow:visible;position:relative;top:0;height:auto}
+  .main-left{border-right:none;border-bottom:1px solid var(--border);justify-content:flex-start;min-height:auto;padding-top:80px}
+  .main-right{padding:40px 32px}
+  .overlay{top:56px}
+}
+
+/* ================================================================
+   OVERLAYS — full screen pseudo-pages
+================================================================ */
+.overlay{
+  position:fixed;inset:0;top:56px;
+  background:var(--bg);
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  z-index:600;
+}
+.overlay.visible{display:flex}
+
+.ov-header{
+  padding:24px 40px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:20px;
+  flex-shrink:0;
+}
+.ov-title-block{}
+.ov-num{
+  font-family:'Rajdhani',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2px;
+}
+.ov-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:28px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text);
+}
+
+/* Animated line under title — P3R header underline */
+.ov-header-line{
+  flex:1;height:1px;
+  background:linear-gradient(90deg,var(--borderhi),transparent);
+  transform:scaleX(0);transform-origin:left;
+}
+.ov-header-line.in{transform:scaleX(1);transition:transform .5s var(--snap) .1s}
+
+.ov-body{
+  flex:1;overflow-y:auto;
+  padding:40px 40px;
+}
+@media(max-width:640px){
+  .ov-header{padding:20px 24px}
+  .ov-body{padding:28px 24px}
+}
+
+/* Overlay background bubbles */
+.ov-bubbles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+
+/* Content above bubbles */
+.ov-content{position:relative;z-index:1}
+
+/* ── Overlay entrance animations ──
+   Items flow in like water filling a container:
+   slight X overshoot (slosh), scaleX squeeze → expand  */
+.ov-item{
+  opacity:0;
+  transform:translateX(-20px) scaleX(0.97);
+  transform-origin:left center;
+  transition:
+    opacity   .38s var(--flow),
+    transform .42s var(--slosh);
+}
+.ov-item.ov-in{opacity:1;transform:none}
+
+/* ── EXPERIENCE overlay ─────────────────────────────── */
+.exp-grid{display:flex;flex-direction:column;gap:20px}
+
+.exp-entry{display:grid;grid-template-columns:80px 1fr;gap:18px}
+@media(max-width:600px){.exp-entry{grid-template-columns:1fr}}
+
+/* Arcana badge */
+.arcana{display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:2px}
+.arc-ring{
+  width:44px;height:44px;border:2px solid var(--blue);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;background:var(--surface2);
+  transition:border-color .15s,box-shadow .15s;
+  /* GIF animation: gentle pulsing glow */
+  animation:arc-idle 3s ease-in-out infinite;
+}
+@keyframes arc-idle{
+  0%,100%{box-shadow:0 0 0 0 rgba(91,159,255,0)}
+  50%    {box-shadow:0 0 16px rgba(91,159,255,.2)}
+}
+.exp-entry:hover .arc-ring{border-color:var(--blueh);box-shadow:0 0 20px rgba(91,159,255,.3)}
+.arc-num{
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--blueh);
+}
+.arc-name{
+  font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:center;white-space:nowrap;
+}
+
+.exp-card{
+  background:var(--surface);border:1px solid var(--border);
+  padding:20px 24px;position:relative;transition:border-color .15s;
+}
+.exp-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blueh),var(--blue),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .22s var(--snap);
+}
+.exp-entry:hover .exp-card{border-color:rgba(91,159,255,.28)}
+.exp-entry:hover .exp-card::after{transform:scaleX(1)}
+
+.exp-role{
+  font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;
+  color:var(--text);letter-spacing:.04em;
+}
+.exp-dates{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;
+  color:var(--gold);letter-spacing:.08em;white-space:nowrap;
+}
+.exp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.exp-company{font-size:11px;font-weight:500;color:var(--blueh);letter-spacing:.04em;margin-bottom:12px}
+.exp-bul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.exp-bul li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13px;color:var(--muted);line-height:1.65;
+}
+.exp-bul li::before{
+  content:'';flex-shrink:0;width:5px;height:5px;margin-top:7px;
+  border:1px solid var(--blue);transform:rotate(45deg);
+}
+.exp-tags{display:none}
+.exp-tag{
+  padding:2px 9px;background:rgba(42,100,220,.08);border:1px solid rgba(42,100,220,.2);
+  font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blueh);
+}
+
+/* ── SKILLS overlay ─────────────────────────────────── */
+.skills-wrap{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:18px;
+}
+@media(max-width:640px){.skills-wrap{grid-template-columns:1fr}}
+
+.sg{
+  background:var(--surface);border:1px solid var(--border);
+  padding:24px 22px;position:relative;
+}
+.sg::after{
+  content:'';position:absolute;bottom:0;right:0;
+  width:12px;height:12px;
+  border-right:1px solid rgba(91,159,255,.25);border-bottom:1px solid rgba(91,159,255,.25);
+}
+.sg-head{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.sg-dia{
+  width:22px;height:22px;flex-shrink:0;
+  background:rgba(42,100,220,.1);border:1px solid var(--blue);
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  /* GIF: pulsing rotation */
+  animation:dia-spin 6s linear infinite;
+}
+@keyframes dia-spin{
+  0%  {transform:rotate(0deg) scale(1)}
+  50% {transform:rotate(180deg) scale(1.1)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+.sg-title{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text);
+}
+.sbars{display:flex;flex-direction:column;gap:14px}
+.sbar{}
+.sbar-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.sbar-lbl{font-size:12px;color:var(--muted)}
+.sbar-rank{
+  font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;
+  color:var(--gold);letter-spacing:.1em;
+}
+.sbar-track{height:4px;background:rgba(42,100,220,.1);position:relative}
+.sbar-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--blue),#2AADFF,var(--blueh));
+  background-size:200% 100%;
+  transition:width .55s var(--surge);   /* surge = builds momentum like rushing water */
+  position:relative;overflow:hidden;
+}
+/* Shimmer — light rippling across the bar like sunlight on water */
+.sbar-fill::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.22) 50%,transparent 100%);
+  transform:translateX(-100%);
+  animation:bar-shimmer 1.8s ease-in-out infinite;
+}
+@keyframes bar-shimmer{
+  0%  {transform:translateX(-100%)}
+  100%{transform:translateX(300%)}
+}
+.sbar-fill::after{
+  content:'';position:absolute;right:-1px;top:-5px;
+  width:14px;height:14px;background:var(--blueh);border-radius:50%;
+  box-shadow:0 0 14px rgba(91,200,255,1), 0 0 28px rgba(91,159,255,.5);
+  opacity:0;
+  transition:opacity .25s .5s, box-shadow .25s .5s;
+}
+.sbar-fill.lit::after{opacity:1}
+
+/* Water ripple ring — injected by JS at overlay open */
+.ripple-ring{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:803;
+  border:2px solid rgba(91,200,255,.7);
+  width:6px;height:6px;margin:-3px 0 0 -3px;
+  animation:ripple-expand .9s var(--flow) forwards;
+}
+@keyframes ripple-expand{
+  0%  {transform:scale(1);  opacity:.9}
+  100%{transform:scale(50); opacity:0}
+}
+
+/* RANK UP popup GIF effect */
+.rankup{
+  position:absolute;right:16px;top:8px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);pointer-events:none;
+  animation:rankup 1.2s ease-out forwards;
+}
+@keyframes rankup{
+  0%  {transform:translateY(0) scale(.6);opacity:1}
+  40% {transform:translateY(-6px) scale(1.1);opacity:1}
+  100%{transform:translateY(-20px) scale(.9);opacity:0}
+}
+
+/* ── PROJECTS overlay ───────────────────────────────── */
+.proj-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:16px;
+}
+@media(max-width:640px){.proj-grid{grid-template-columns:1fr}}
+
+.proj-card{
+  background:var(--surface);border:1px solid var(--border);
+  padding:24px 22px;position:relative;overflow:hidden;
+  text-decoration:none;display:block;
+  transition:border-color .15s,transform .15s;
+  /* P3R cut corners — consistent with all other UI elements */
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+}
+.proj-card:hover{
+  border-color:rgba(91,159,255,.35);
+  transform:translateY(-3px);
+  box-shadow:0 8px 28px rgba(42,100,220,.12);
+}
+.proj-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blueh),var(--blue),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .2s var(--snap);
+}
+.proj-card:hover::after{transform:scaleX(1)}
+.proj-ghost{
+  position:absolute;top:-8px;right:10px;
+  font-family:'Rajdhani',sans-serif;font-size:80px;font-weight:700;
+  color:rgba(42,100,220,.05);line-height:1;pointer-events:none;user-select:none;
+}
+.proj-type{
+  font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;
+}
+.proj-name{
+  font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;
+  color:var(--text);letter-spacing:.04em;margin-bottom:10px;
+}
+.proj-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0}
+.proj-arrow{ display:none }
+.proj-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.proj-tags{ display:none }
+.proj-tag{}
+/* Featured full-width */
+.proj-card.feat{
+  grid-column:1/-1;display:grid;
+  grid-template-columns:1fr 280px;gap:28px;align-items:center;
+}
+@media(max-width:640px){.proj-card.feat{grid-column:auto;grid-template-columns:1fr}}
+.proj-badge{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:18px;
+  border:1px solid rgba(42,100,220,.18);background:rgba(42,100,220,.05);
+  /* GIF: subtle pulse */
+  animation:badge-pulse 2.5s ease-in-out infinite;
+}
+@keyframes badge-pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(91,159,255,0)}
+  50%    {box-shadow:0 0 20px rgba(91,159,255,.15)}
+}
+.badge-big{
+  font-family:'Rajdhani',sans-serif;font-size:40px;font-weight:700;
+  color:var(--blueh);line-height:1;
+}
+.badge-sub{
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);text-align:center;line-height:1.5;
+}
+
+/* ── PROJECT SCREENSHOTS ────────────────────────────── */
+.proj-img-wrap {
+  margin:12px 0 10px;
+  display:flex;gap:5px;
+}
+.proj-img {
+  flex:1;height:250px;
+  object-fit:contain;object-position:center;
+  background:var(--surface2);
+  /* P3R cut-corner — matches btn and c-link across the design */
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  filter:saturate(.55) brightness(.75);
+  transition:filter .3s;
+}
+.proj-card:hover .proj-img {
+  filter:saturate(.9) brightness(.95);
+}
+/* Featured card right panel */
+.proj-feat-img {
+  width:100%;height:260px;
+  object-fit:contain;object-position:center;
+  background:var(--surface2);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  filter:saturate(.6) brightness(.75);
+  transition:filter .3s;
+}
+.proj-card.feat:hover .proj-feat-img {
+  filter:saturate(.95) brightness(.95);
+}
+
+/* ── SKILLS → PROOF-OF-WORK ────────────────────────── */
+.proofs { display:flex;flex-direction:column;gap:0 }
+.proof-item {
+  padding:9px 0;
+  border-bottom:1px solid rgba(46,100,220,.1);
+}
+.proof-item:last-child { border-bottom:none }
+.proof-marker {
+  font-family:'Rajdhani',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:3px;
+}
+.proof-skill {
+  font-family:'Rajdhani',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text);margin-bottom:3px;
+}
+.proof-ev {
+  font-size:11px;color:var(--muted);line-height:1.55;
+}
+
+/* ── HERO CONTACT ROW ───────────────────────────────── */
+.hero-contact {
+  display:flex;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap;
+}
+.hc-wrap { display:contents }
+.hc-link {
+  display:flex;align-items:center;gap:7px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:8px 16px;
+  border:1px solid rgba(91,159,255,.25);
+  transition:color .15s,border-color .15s,box-shadow .15s;
+}
+.hc-link:hover {
+  color:var(--blueh);
+  border-color:var(--blueh);
+  box-shadow:0 0 10px rgba(91,159,255,.2);
+}
+
+/* ── CONTACT overlay ────────────────────────────────── */
+.contact-body{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:60vh;gap:32px;text-align:center;
+}
+.contact-lead{
+  font-size:15px;color:var(--muted);line-height:1.85;max-width:520px;
+}
+.contact-links{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.c-link{
+  display:flex;align-items:center;gap:8px;padding:13px 24px;
+  border:1px solid var(--border);text-decoration:none;
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:color .15s,border-color .15s;
+}
+.c-link:hover{color:var(--blueh);border-color:var(--blueh)}
+
+/* ================================================================
+   CUT-CORNER BUTTON (used in main page hero area)
+================================================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 26px;
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;border:none;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:background .15s,color .15s;
+}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blueh)}
+.btn-outline{
+  background:transparent;color:var(--muted);
+  border:1px solid rgba(91,159,255,.25);
+}
+.btn-outline:hover{color:var(--text);border-color:var(--blueh)}
+
+
+/* ================================================================
+   ENHANCEMENT 1 — Scanline texture overlay
+================================================================ */
+#scanlines{
+  position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,transparent 3px,
+    rgba(0,0,0,.018) 3px,rgba(0,0,0,.018) 4px
+  );
+}
+
+/* ================================================================
+   ENHANCEMENT 2 — Cursor glow
+================================================================ */
+#cursor-glow{
+  position:fixed;width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle,rgba(42,100,220,.07) 0%,transparent 65%);
+  pointer-events:none;z-index:1;top:0;left:0;
+  will-change:transform;mix-blend-mode:screen;
+}
+
+/* ================================================================
+   ENHANCEMENT 3 — Hero name glitch flash (fires once on load)
+================================================================ */
+@keyframes hero-glitch{
+  0%,100%{text-shadow:none;transform:translateX(0)}
+  12%{text-shadow:3px 0 rgba(255,30,80,.55),-3px 0 rgba(0,210,255,.55);transform:translateX(2px)}
+  24%{text-shadow:-2px 0 rgba(255,30,80,.4),2px 0 rgba(0,210,255,.4);transform:translateX(-2px)}
+  36%{text-shadow:2px 0 rgba(255,30,80,.25),-1px 0 rgba(0,210,255,.25);transform:translateX(1px)}
+  50%{text-shadow:none;transform:translateX(0)}
+}
+.hero-name.glitch{animation:hero-glitch .45s ease-out forwards}
+
+/* ================================================================
+   ENHANCEMENT 4 — Arcana ring spin on experience hover
+================================================================ */
+.arc-ring{
+  transition:transform .55s var(--flow),border-color .15s,box-shadow .15s;
+}
+.exp-entry:hover .arc-ring{
+  animation:none;
+  transform:rotate(360deg);
+  border-color:var(--blueh);
+  box-shadow:0 0 22px rgba(91,159,255,.35);
+}
+
+/* ================================================================
+   ENHANCEMENT 5 — Project image zoom on hover
+================================================================ */
+.proj-img{
+  transition:transform .45s var(--flow),filter .3s;
+}
+.proj-card:hover .proj-img{
+  transform:scale(1.05);
+}
+
+/* ================================================================
+   ENHANCEMENT 6 — Proof item base state (for stagger-in)
+================================================================ */
+.proof-item{
+  opacity:0;
+  transform:translateX(-10px);
+  transition:opacity .3s var(--flow),transform .35s var(--slosh);
+}
+.proof-item.proof-in{
+  opacity:1;transform:none;
+}
+
+  </style>
+</head>
+<body>
+
+<!-- SCANLINE TEXTURE -->
+<div id="scanlines"></div>
+
+<!-- CURSOR GLOW -->
+<div id="cursor-glow"></div>
+
+<!-- PAGE-LOAD SPLASH -->
+<div id="splash"></div>
+
+<!-- P3R TRANSITION PANEL -->
+<div id="tp"></div>
+
+<!-- BURST RING (GIF effect at click origin) -->
+<div id="burst"></div>
+
+<!-- ================================================================
+     TOP NAV
+================================================================ -->
+<header id="nav">
+  <div class="nav-logo-wrap">
+    <a class="nav-logo" onclick="goHome()">AL<em>V</em>IN</a>
+    <div class="nav-sep"></div>
+    <span class="nav-sub">Product</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:24px">
+    <span id="nav-section"></span>
+    <button id="nav-back" onclick="closeSection()">
+      <span class="arr">←</span> BACK
+    </button>
+  </div>
+</header>
+
+<!-- ================================================================
+     MAIN PAGE
+================================================================ -->
+<div id="main-page">
+
+  <!-- Left: Hero + About -->
+  <div class="main-left">
+    <div class="arcana-bg"></div>
+    <div class="bubbles" id="main-bub"></div>
+
+    <!-- Eyebrow -->
+    <div class="mask" style="margin-bottom:10px">
+      <div class="hero-eyebrow lift" id="h0">
+        <div class="pulse"></div>
+        <span class="eyebrow-text">Head of Product &nbsp;·&nbsp; AI &amp; Fintech</span>
+      </div>
+    </div>
+
+    <!-- Name -->
+    <div class="mask" style="margin-bottom:10px;line-height:.9">
+      <h1 class="hero-name lift" id="h1">
+        <span class="first">Alvin</span><br>
+        <span class="last">Hiero</span>
+      </h1>
+    </div>
+
+    <!-- Title -->
+    <div class="mask" style="margin-bottom:14px">
+      <div class="hero-title lift" id="h2">
+        <strong>12 Years.</strong> Banks. Unicorns. AI Startups.
+      </div>
+    </div>
+
+    <!-- About text -->
+    <div class="mask" style="margin-bottom:18px">
+      <p class="about-text lift" id="h3">
+        Banks, unicorns, startups, AI fintech. 12 years, every kind of constraint, every type of stakeholder. What I've figured out: great systems beat great ideas. I build the system: the right people, the right process, the right culture. My teams tend to stay, grow, and ship well.
+      </p>
+    </div>
+
+
+    <!-- Contact inline -->
+    <div class="mask" style="margin-top:20px">
+      <div class="hero-contact lift" id="h5">
+        <a href="mailto:hiero.alvin@gmail.com" class="hc-link">✉ &nbsp;Email</a>
+        <a href="https://www.linkedin.com/in/alvin-hiero-47a4a353/" class="hc-link" target="_blank">in &nbsp;LinkedIn</a>
+      </div>
+    </div>
+
+  </div><!-- /main-left -->
+
+  <!-- Right: P3R menu nav -->
+  <div class="main-right">
+    <div class="menu-label">Navigate</div>
+
+    <div class="p3-item" data-target="ov-experience">
+      <span class="p3-tri">▶</span>
+      <span class="p3-label">Experience</span>
+      <span class="p3-sub">12 yrs</span>
+    </div>
+    <div class="p3-item" data-target="ov-skills">
+      <span class="p3-tri">▶</span>
+      <span class="p3-label">Skills</span>
+      <span class="p3-sub">Craft</span>
+    </div>
+    <div class="p3-item" data-target="ov-projects">
+      <span class="p3-tri">▶</span>
+      <span class="p3-label">Projects</span>
+      <span class="p3-sub">Work</span>
+    </div>
+  </div>
+
+</div><!-- /main-page -->
+
+<!-- ================================================================
+     EXPERIENCE OVERLAY
+================================================================ -->
+<div id="ov-experience" class="overlay">
+  <div class="ov-header">
+    <div class="ov-title-block">
+      <div class="ov-num">02 · Career</div>
+      <div class="ov-title">Experience</div>
+    </div>
+    <div class="ov-header-line"></div>
+  </div>
+  <div class="ov-body">
+    <div class="ov-bubbles" id="exp-bub"></div>
+    <div class="ov-content">
+      <div class="exp-grid">
+
+        <div class="exp-entry ov-item">
+          <div class="arcana">
+            <div class="arc-ring"><span class="arc-num">V</span></div>
+            <div class="arc-name">Startup Builder Arc</div>
+          </div>
+          <div class="exp-card">
+            <div class="exp-top">
+              <div class="exp-role">Head of Product</div>
+              <div class="exp-dates">2022 — Present</div>
+            </div>
+            <div class="exp-company">Ringkas &nbsp;·&nbsp; Fintech / Mortgage Aggregator &nbsp;·&nbsp; Singapore</div>
+            <ul class="exp-bul">
+              <li>Built Indonesia's first AI mortgage assistant (RISA) from zero: concept, orchestration design, white-label config layer, and LangSmith eval framework. Now live across 26 banks and 10 major property developers.</li>
+              <li>Architected the dual-interface platform: separated internal ops tool from client self-serve portal, defined 7-phase capability migration, and designed session-based WABA billing replacing flat-fee pricing.</li>
+              <li>Built and led a cross-functional team (3 PMs, 2 designers, 2 analysts, 1 data engineer) with near-zero voluntary turnover and consistent above-expectation ratings from C-level.</li>
+              <li>Scaled the loan origination platform to thousands of applications/month under OJK regulatory compliance across all bank integrations.</li>
+            </ul>
+            <div class="exp-tags">
+              <span class="exp-tag">AI Agent</span><span class="exp-tag">LangChain</span>
+              <span class="exp-tag">LangSmith</span><span class="exp-tag">Fintech</span><span class="exp-tag">B2B SaaS</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-entry ov-item">
+          <div class="arcana">
+            <div class="arc-ring"><span class="arc-num">IV</span></div>
+            <div class="arc-name">Strategist Arc</div>
+          </div>
+          <div class="exp-card">
+            <div class="exp-top">
+              <div class="exp-role">Product Manager → PM III</div>
+              <div class="exp-dates">2019 — 2022</div>
+            </div>
+            <div class="exp-company">Traveloka &nbsp;·&nbsp; Travel OTA / Food Delivery &nbsp;·&nbsp; Jakarta</div>
+            <ul class="exp-bul">
+              <li>Grew Traveloka Eats from 1,000 to 100,000 orders/day in one year. Required rebuilding the business model from travel redemption to instant delivery, covering logistics infra and accounting complexity.</li>
+              <li>Launched food delivery on an OTA platform within one month, shipping across design, engineering, and cross-functional teams amid pandemic working constraints.</li>
+              <li>Achieved 25% steady visit-to-purchase conversion via personalized upper funnel experiences and strategic trigger prompts.</li>
+              <li>Drove 50%+ monthly order growth by launching a payment and promotion model for the dine-in vertical combining digital wallets with restaurant-funded promotions.</li>
+            </ul>
+            <div class="exp-tags">
+              <span class="exp-tag">Food Delivery</span><span class="exp-tag">Consumer Growth</span>
+              <span class="exp-tag">Travel OTA</span><span class="exp-tag">Marketplace</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-entry ov-item">
+          <div class="arcana">
+            <div class="arc-ring"><span class="arc-num">III</span></div>
+            <div class="arc-name">Unicorn PM Arc</div>
+
+          </div>
+          <div class="exp-card">
+            <div class="exp-top">
+              <div class="exp-role">Product Manager</div>
+              <div class="exp-dates">2018 — 2019</div>
+            </div>
+            <div class="exp-company">Tokopedia &nbsp;·&nbsp; E-Commerce Marketplace &nbsp;·&nbsp; Jakarta</div>
+            <ul class="exp-bul">
+              <li>Cut 12 billion IDR in customer support Opex by shipping a chatbot resolving 33% of all complaint tickets. Tokopedia's first self-service CX automation at scale.</li>
+              <li>Rebuilt Help Center navigation: introduced smart search and reclassified 600 articles to reduce low-complexity ticket volume.</li>
+            </ul>
+            <div class="exp-tags">
+              <span class="exp-tag">E-Commerce</span><span class="exp-tag">CX Automation</span>
+              <span class="exp-tag">Chatbot</span><span class="exp-tag">Cost Reduction</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-entry ov-item">
+          <div class="arcana">
+            <div class="arc-ring"><span class="arc-num">II</span></div>
+            <div class="arc-name">Early Technologist Arc</div>
+          </div>
+          <div class="exp-card">
+            <div class="exp-top">
+              <div class="exp-role">Product Manager</div>
+              <div class="exp-dates">2017 — 2018</div>
+            </div>
+            <div class="exp-company">Qlue Smart City &nbsp;·&nbsp; GovTech / PropTech &nbsp;·&nbsp; Jakarta</div>
+            <ul class="exp-bul">
+              <li>Built a white-label residential management platform sold to property developers. Secured contracts with 4 major developers through client presentations and custom demo environments.</li>
+              <li>Integrated the Qlue citizen reporting app with Jakarta Smart City's government ops dashboard. Live infrastructure report tracking across Jakarta districts in real time.</li>
+            </ul>
+            <div class="exp-tags">
+              <span class="exp-tag">GovTech</span><span class="exp-tag">PropTech</span>
+              <span class="exp-tag">White-Label</span><span class="exp-tag">B2B</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-entry ov-item">
+          <div class="arcana">
+            <div class="arc-ring"><span class="arc-num">I</span></div>
+            <div class="arc-name">Foundation Arc</div>
+          </div>
+          <div class="exp-card">
+            <div class="exp-top">
+              <div class="exp-role">IT Project Manager</div>
+              <div class="exp-dates">2015 — 2017</div>
+            </div>
+            <div class="exp-company">Bank Sahabat Sampoerna &nbsp;·&nbsp; Banking &nbsp;·&nbsp; Jakarta</div>
+            <ul class="exp-bul">
+              <li>Led Core Banking System replacement (Alphabits to Temenos T24) as BA, tester, PM, and trainer. Delivered zero data loss on Time Deposit migration, 61 change requests under SDLC framework.</li>
+              <li>IT Project Manager for SOBATKU e-wallet launch: coordinated business, legal (OJK e-wallet license), and operations (KYC process, reconciliation) from kickstart to launch.</li>
+            </ul>
+            <div class="exp-tags">
+              <span class="exp-tag">Core Banking</span><span class="exp-tag">Temenos T24</span>
+              <span class="exp-tag">e-Wallet</span><span class="exp-tag">OJK</span><span class="exp-tag">Data Migration</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     SKILLS OVERLAY
+================================================================ -->
+<div id="ov-skills" class="overlay">
+  <div class="ov-header">
+    <div class="ov-title-block">
+      <div class="ov-num">03 · Abilities</div>
+      <div class="ov-title">Skills</div>
+    </div>
+    <div class="ov-header-line"></div>
+  </div>
+  <div class="ov-body">
+    <div class="ov-bubbles" id="skills-bub"></div>
+    <div class="ov-content">
+      <div class="skills-wrap">
+
+        <div class="sg ov-item">
+          <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">Product Craft</div></div>
+          <div class="proofs">
+            <div class="proof-item">
+              <div class="proof-marker">Strategy Before the Team Exists</div>
+              <div class="proof-skill">Roadmap, architecture, OKR — built before first PM hire</div>
+              <div class="proof-ev">At Ringkas: defined the 12-month AI product roadmap, dual-interface platform architecture, 7-phase capability migration, and OKR/KPI framework for RISA before a product team existed. Strategy that held through 3 years of growth.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">Delivery Under Every Constraint</div>
+              <div class="proof-skill">Pandemic. Legacy infra. Regulated market. Still shipped.</div>
+              <div class="proof-ev">Traveloka Eats MVP in one month, full remote, pandemic. Required rebuilding payment rails, logistics, and accounting — not just features. Near-zero team turnover throughout. Ringkas RISA shipped across OJK-regulated bank integrations without compliance failure.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">PRD Depth &amp; Engineering Handoff</div>
+              <div class="proof-skill">4 major PRDs with full TRD, timeline, and ticket structure</div>
+              <div class="proof-ev">RISA PRDs covered Platform Foundation, Client Management, AI Quality Evaluation, and Billing — each with full TRD task tables, three-scenario timeline estimation (Best/Expected/Worst), and engineering ticket breakdowns. Engineers could build directly from the spec.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg ov-item">
+          <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">AI Product</div></div>
+          <div class="proofs">
+            <div class="proof-item">
+              <div class="proof-marker">Agent Design</div>
+              <div class="proof-skill">Full conversation architecture to production</div>
+              <div class="proof-ev">RISA: designed intake conversation flow from scratch — income, employment, liabilities, eligibility, documents. White-label config layer per bank partner. LangChain tool calls for doc parsing, eligibility calculation, and CRM handoff. WABA integration for WhatsApp delivery.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">Eval &amp; Quality Systems</div>
+              <div class="proof-skill">LLM-as-judge before it was standard practice</div>
+              <div class="proof-ev">Built LangSmith evaluation covering 5 dimensions: conversation quality, task completion rate, hallucination frequency, tone compliance, escalation accuracy. Real conversation dataset maintained and versioned. Failed sessions feed directly into prompt tuning loop.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">AI PM Operating Model</div>
+              <div class="proof-skill">Defined how a team manages an AI product</div>
+              <div class="proof-ev">Built the full AI PM operating model at Ringkas: prompt-to-eval loop, human review cadence, agent config versioning, feedback pipeline from RISA conversations to product backlog. OKR/KPIs tied to qualification accuracy and conversion, not AI vanity metrics.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg ov-item">
+          <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">Team &amp; Culture</div></div>
+          <div class="proofs">
+            <div class="proof-item">
+              <div class="proof-marker">Building Teams That Stay</div>
+              <div class="proof-skill">Near-zero turnover across every role</div>
+              <div class="proof-ev">Built an 8-person cross-functional team at Ringkas (3 PMs, 2 designers, 2 analysts, 1 data engineer) with near-zero voluntary turnover. Consistent above-expectation performance ratings from C-level. Same pattern at Traveloka Eats under pandemic and high-pressure conditions.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">Process from Zero</div>
+              <div class="proof-skill">Defined product process when none existed</div>
+              <div class="proof-ev">At Ringkas, built all product processes from scratch: PRD format, sprint cadence, stakeholder review rhythm, roadmap cadence, data analyst handoff workflow, and engineering ticket standards. A new PM joining the team has a full operating system to work within.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">Cross-Functional Leadership</div>
+              <div class="proof-skill">Led without authority across banks, engineers, and ops</div>
+              <div class="proof-ev">At Ringkas: coordinated FE, BE, data science, and 26 bank partner integrations. At Traveloka: shipped across logistics, finance, ops, and restaurant partners. At Qlue: led government and property developer relationships directly.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg ov-item">
+          <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">Business &amp; Scale</div></div>
+          <div class="proofs">
+            <div class="proof-item">
+              <div class="proof-marker">Consumer Growth</div>
+              <div class="proof-skill">100x · 50% MoM · 25% sustained conversion</div>
+              <div class="proof-ev">Traveloka Eats: 1,000 to 100,000 orders/day in one year. Traveloka Dine-In: 50% monthly order growth via payment and promotion model. Upper funnel: 25% visit-to-purchase conversion sustained across cohorts — not just at launch.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">Monetization Design</div>
+              <div class="proof-skill">Built business models, not just features</div>
+              <div class="proof-ev">Session-based WABA billing at Ringkas — replaced flat-fee pricing. Restaurant-funded promotion model at Traveloka (restaurants pay the discount, Traveloka captures the transaction). Voucher and redemption loop for Traveloka Eats Voucher. Each tied to a clear commercial logic.</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-marker">Automation &amp; Opex</div>
+              <div class="proof-skill">12 billion IDR Opex cut · 33% ticket resolution</div>
+              <div class="proof-ev">Tokopedia: shipped the first self-service CX chatbot at marketplace scale. Mapped complaint taxonomy, built the conversation tree, defined escalation triggers. 33% of all tickets resolved without a human. 12B IDR cut in annual support Opex.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PROJECTS OVERLAY
+================================================================ -->
+<div id="ov-projects" class="overlay">
+  <div class="ov-header">
+    <div class="ov-title-block">
+      <div class="ov-num">04 · Portfolio</div>
+      <div class="ov-title">Projects</div>
+    </div>
+    <div class="ov-header-line"></div>
+  </div>
+  <div class="ov-body">
+    <div class="ov-bubbles" id="proj-bub"></div>
+    <div class="ov-content">
+      <div class="proj-grid">
+
+        <!-- ── RINGKAS ────────────────────────────────── -->
+        <div class="proj-card feat ov-item">
+          <div>
+            <span class="proj-ghost">01</span>
+            <div class="proj-type">AI Agent &nbsp;·&nbsp; Production</div>
+            <div class="proj-name">RISA · Ringkas AI</div>
+            <p class="proj-desc">Indonesia's first AI mortgage assistant. RISA runs on WhatsApp and handles the full applicant intake: income, employment, liabilities, documents, eligibility. It routes a qualified lead to the right bank. Built from zero: conversation architecture, LangChain orchestration, white-label config layer per bank partner, LangSmith eval framework, and OKR/KPI structure. Live across 26 banks and 10 major property developers.</p>
+            <div class="proj-tags">
+              <span class="proj-tag">LangChain</span><span class="proj-tag">LangSmith</span>
+              <span class="proj-tag">WhatsApp API</span><span class="proj-tag">Mortgage</span><span class="proj-tag">B2B SaaS</span>
+            </div>
+          </div>
+          <img class="proj-feat-img" src="Projects/screenshots/Ringkas%20AI.png" alt="RISA · Ringkas AI">
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">02</span>
+          <div class="proj-head">
+            <div><div class="proj-type">Platform Design</div><div class="proj-name">Ringkas Platform</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">Ringkas started as a single Ringkas-operated tool. As partner volume grew, that became a bottleneck. Designed the platform split: internal ops tool vs. client self-serve portal. Built the 7-phase capability migration map, role-based permission model, and session-based WABA billing. The architecture that lets bank partners onboard and configure without Ringkas ops intervention.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Ringkas%20App.png" alt="Ringkas Platform"></div>
+          <div class="proj-tags"><span class="proj-tag">B2B Platform</span><span class="proj-tag">Architecture</span><span class="proj-tag">Roadmap</span></div>
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">03</span>
+          <div class="proj-head">
+            <div><div class="proj-type">AI Quality</div><div class="proj-name">RISA Eval Framework</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">Shipping RISA revealed the core problem: how do you know if the AI is actually doing a good job? Built an LLM-as-judge eval system on LangSmith covering conversation quality, task completion rate, hallucination frequency, tone compliance, and escalation accuracy. Includes a real conversation dataset and a feedback loop. Failed sessions feed directly into prompt tuning.</p>
+          <div class="proj-tags"><span class="proj-tag">LangSmith</span><span class="proj-tag">LLM Evals</span><span class="proj-tag">Quality</span></div>
+        </div>
+
+        <!-- ── TRAVELOKA ──────────────────────────────── -->
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">04</span>
+          <div class="proj-head">
+            <div><div class="proj-type">Growth Product &nbsp;·&nbsp; Platform Rebuild</div><div class="proj-name">Traveloka Online Food Delivery</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">100x in one year: 1,000 to 100,000 orders/day. The real challenge wasn't features. Traveloka's core systems ran on travel booking cadence, days to weeks. Food delivery runs on minutes. Rebuilt the order flow, payment/payout rails, logistics integration, and accounting model from scratch. Shipped the MVP in one month, pandemic, full remote.</p>
+          <div class="proj-img-wrap">
+            <img class="proj-img" src="Projects/screenshots/Traveloka%20Food%20Delivery-1.png" alt="Traveloka Food Delivery">
+            <img class="proj-img" src="Projects/screenshots/Traveloka%20Food%20Delivery-2.png" alt="Traveloka Food Delivery">
+          </div>
+          <div class="proj-tags"><span class="proj-tag">100x Growth</span><span class="proj-tag">Food Delivery</span><span class="proj-tag">OTA</span></div>
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">05</span>
+          <div class="proj-head">
+            <div><div class="proj-type">Voucher &nbsp;·&nbsp; Loyalty</div><div class="proj-name">Traveloka Eats Voucher</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">Traveloka's original food product: a restaurant voucher and redemption system letting users spend Traveloka credits on dining. Different from the food delivery pivot. This was a slow-cycle discovery and redemption loop, serving users who wanted to use travel points for in-person dining experiences.</p>
+          <div class="proj-tags"><span class="proj-tag">Voucher</span><span class="proj-tag">Loyalty</span><span class="proj-tag">Restaurant</span><span class="proj-tag">OTA</span></div>
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">06</span>
+          <div class="proj-head">
+            <div><div class="proj-type">Marketplace &nbsp;·&nbsp; Monetization</div><div class="proj-name">Traveloka Dine-In</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">Brought payment in-app for Traveloka's dine-in product. Combined TravelokaPay digital wallet with restaurant-funded promotions: restaurants pay the discount, Traveloka captures the transaction. Designed the partner onboarding flow, discount cap config, and reporting dashboard.</p>
+          <div class="proj-img-wrap">
+            <img class="proj-img" src="Projects/screenshots/Traveloka%20Dine%20in-1.png" alt="Traveloka Dine-In">
+            <img class="proj-img" src="Projects/screenshots/Traveloka%20Dine%20in-2.png" alt="Traveloka Dine-In">
+          </div>
+          <div class="proj-tags"><span class="proj-tag">50% MoM Growth</span><span class="proj-tag">Payments</span><span class="proj-tag">Promotions</span><span class="proj-tag">Restaurant</span></div>
+        </div>
+
+        <!-- ── TOKOPEDIA ──────────────────────────────── -->
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">07</span>
+          <div class="proj-head">
+            <div><div class="proj-type">CX Automation &nbsp;·&nbsp; Cost Reduction</div><div class="proj-name">Tokopedia Support Bot</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">12 billion IDR Opex cut. Mapped Tokopedia's complaint taxonomy to find which ticket categories had deterministic resolution paths, built the conversation tree, defined escalation triggers, and shipped the bot. Resolves 33% of all customer complaint tickets without a human. First self-service CX automation at Tokopedia's scale.</p>
+          <div class="proj-tags"><span class="proj-tag">12B IDR Saved</span><span class="proj-tag">Chatbot</span><span class="proj-tag">CX Ops</span><span class="proj-tag">E-Commerce</span></div>
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">08</span>
+          <div class="proj-head">
+            <div><div class="proj-type">CX Product &nbsp;·&nbsp; Information Architecture</div><div class="proj-name">Tokopedia Help Center</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">600+ articles in a flat structure users couldn't navigate. Introduced smart search with intent matching, reclassified all 600 articles into a logical hierarchy with consistent naming. Ran alongside the chatbot project. Together they moved the majority of low-complexity tickets to self-service.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Tokopedia%20Help%20Center.png" alt="Tokopedia Help Center"></div>
+          <div class="proj-tags"><span class="proj-tag">Search</span><span class="proj-tag">IA</span><span class="proj-tag">CX</span><span class="proj-tag">Content Ops</span></div>
+        </div>
+
+        <!-- ── QLUE ───────────────────────────────────── -->
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">09</span>
+          <div class="proj-head">
+            <div><div class="proj-type">PropTech &nbsp;·&nbsp; B2B Platform</div><div class="proj-name">Qlue Residential</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">White-label residential management platform for property developers. Configurable modules for maintenance requests, visitor management, billing, and resident announcements. Built demo environments, led client presentations, and secured contracts with 4 major developers.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Qlue%20Residential%20App.png" alt="Qlue Residential"></div>
+          <div class="proj-tags"><span class="proj-tag">4 Contracts</span><span class="proj-tag">White-Label</span><span class="proj-tag">PropTech</span><span class="proj-tag">B2B</span></div>
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">10</span>
+          <div class="proj-head">
+            <div><div class="proj-type">GovTech &nbsp;·&nbsp; Civic Infrastructure</div><div class="proj-name">Jakarta Smart City Integration</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">Integrated the Qlue citizen app with Jakarta Smart City's government ops dashboard. Citizen infrastructure reports (potholes, flooding, garbage) sync in real time to city officers, tagged by district, category, and severity. Enables assignment and resolution tracking across Jakarta.</p>
+          <div class="proj-img-wrap">
+            <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-1.png" alt="Jakarta Smart City">
+            <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-2.png" alt="Jakarta Smart City">
+          </div>
+          <div class="proj-tags"><span class="proj-tag">GovTech</span><span class="proj-tag">API Integration</span><span class="proj-tag">Smart City</span><span class="proj-tag">Public Sector</span></div>
+        </div>
+
+        <!-- ── BANK SAHABAT SAMPOERNA ─────────────────── -->
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">11</span>
+          <div class="proj-head">
+            <div><div class="proj-type">Core Banking &nbsp;·&nbsp; Enterprise Migration</div><div class="proj-name">BSS · T24 CBS Replacement</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">Full core banking system replacement at Bank Sahabat Sampoerna: Alphabits to Temenos T24. Acted as BA, tester, PM, and trainer across the Funding Module. Delivered Time Deposit data migration with zero data integrity issues. Managed 61 change requests under SDLC and co-led customer communication through the cutover.</p>
+          <div class="proj-tags"><span class="proj-tag">Temenos T24</span><span class="proj-tag">Data Migration</span><span class="proj-tag">SDLC</span><span class="proj-tag">Banking</span></div>
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">12</span>
+          <div class="proj-head">
+            <div><div class="proj-type">Fintech &nbsp;·&nbsp; Mobile &nbsp;·&nbsp; Regulatory</div><div class="proj-name">SOBATKU e-Wallet</div></div>
+            <div class="proj-arrow">↗</div>
+          </div>
+          <p class="proj-desc">IT Project Manager for Bank Sahabat Sampoerna's e-wallet mobile app launch. Coordinated across business (product scope), legal (OJK e-wallet license process), and operations (KYC design, reconciliation). BSS's first move into digital payments before the major e-wallet players dominated.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Sobatku%20bank%20sahabat%20sampoerna.png" alt="SOBATKU e-Wallet"></div>
+          <div class="proj-tags"><span class="proj-tag">e-Wallet</span><span class="proj-tag">OJK License</span><span class="proj-tag">KYC</span><span class="proj-tag">Mobile</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     SCRIPTS
+================================================================ -->
+<script>
+'use strict';
+
+/* ── Helpers ─────────────────────────────────────────────── */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const $  = id => document.getElementById(id);
+const qsa = sel => Array.from(document.querySelectorAll(sel));
+
+/* ── State ───────────────────────────────────────────────── */
+let busy = false;
+let activeOverlay = null;
+
+/* ── Page-load hero cascade ──────────────────────────────── */
+// Splash exits at ~0.78s. Hero items start lifting at 0.85s.
+const heroItems  = ['h0','h1','h2','h3','h5'];
+const heroGap    = 70;
+const heroStart  = 820;
+heroItems.forEach((id, i) => {
+  setTimeout(() => {
+    const el = $(id);
+    if (el) el.classList.add('in');
+  }, heroStart + i * heroGap);
+});
+
+/* ── Count-up animation ──────────────────────────────────── */
+function countUp(elId, target, dur, suffix) {
+  const el = $(elId); if (!el) return;
+  const t0 = performance.now();
+  (function tick(now) {
+    const p = Math.min((now - t0) / dur, 1);
+    el.textContent = Math.floor(p * target) + (suffix || '');
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = target + (suffix || '');
+  })(t0);
+}
+
+/* ── Floating bubbles ─────────────────────────────────────── */
+function spawnBubbles(containerId, count) {
+  const c = $(containerId); if (!c) return;
+  const sizes = [4,6,8,10,14,18,6,10,22,8,5,12].slice(0, count);
+  sizes.forEach(sz => {
+    const b = document.createElement('div');
+    b.className = 'bub';
+    b.style.cssText = `width:${sz}px;height:${sz}px;left:${5+Math.random()*90}%;`
+      + `bottom:${-sz}px;animation-duration:${7+Math.random()*11}s;`
+      + `animation-delay:${-(Math.random()*12)}s`;
+    c.appendChild(b);
+  });
+}
+
+/* ── Canvas wave — rides the leading edge of #tp ─────────────
+   Draws a multi-frequency sine wave that scrolls continuously,
+   giving the panel a "water surface" leading edge.
+─────────────────────────────────────────────────────────────── */
+const tp = $('tp');
+
+// Inject canvas into panel
+const wc = document.createElement('canvas');
+wc.style.cssText = 'position:absolute;left:-2px;right:-2px;pointer-events:none;z-index:2;';
+tp.appendChild(wc);
+
+let wOff = 0, wRunning = false;
+const wCtx = wc.getContext('2d');
+
+function resizeWc() {
+  wc.width  = window.innerWidth  + 4;
+  wc.height = 64;
+}
+resizeWc();
+window.addEventListener('resize', resizeWc);
+
+function drawWave(phase) {
+  // phase: 'top' (panel entering from below) | 'right' (panel exiting right)
+  wCtx.clearRect(0, 0, wc.width, wc.height);
+  const g = wCtx.createLinearGradient(0, 0, 0, 64);
+  g.addColorStop(0,   'rgba(0,200,240,0)');
+  g.addColorStop(0.5, 'rgba(15,130,220,0.55)');
+  g.addColorStop(1,   '#0D38B8');
+  wCtx.fillStyle = g;
+  wCtx.beginPath();
+  wCtx.moveTo(-2, 64);
+  for (let x = 0; x <= wc.width; x += 3) {
+    // Three overlapping sine waves — creates slushy, organic edge
+    const y = 32
+      + 14 * Math.sin(x * 0.013 + wOff)
+      + 7  * Math.sin(x * 0.031 + wOff * 1.7)
+      + 4  * Math.sin(x * 0.059 + wOff * 2.4)
+      + 2  * Math.sin(x * 0.11  + wOff * 0.8);
+    wCtx.lineTo(x, y);
+  }
+  wCtx.lineTo(wc.width + 2, 64);
+  wCtx.closePath();
+  wCtx.fill();
+}
+
+function waveLoop() {
+  if (!wRunning) return;
+  wOff += 0.055;   // scroll speed — slower = more sluggish/slushy
+  drawWave();
+  requestAnimationFrame(waveLoop);
+}
+
+function startWave(phase) {
+  // Position canvas at the leading edge
+  if (phase === 'top') {
+    // Panel entering from bottom → wave is at TOP of panel
+    wc.style.top    = '-48px';
+    wc.style.bottom = 'auto';
+    wc.style.transform = 'none';
+    wc.style.width  = '';
+  } else {
+    // Panel exiting right → wave at RIGHT edge (rotated)
+    wc.style.top       = '0';
+    wc.style.bottom    = '0';
+    wc.style.right     = '-48px';
+    wc.style.transform = 'rotate(90deg) translateY(-50%) scaleX(3)';
+    wc.style.transformOrigin = 'right center';
+  }
+  wRunning = true;
+  waveLoop();
+}
+
+function stopWave() {
+  wRunning = false;
+  wCtx.clearRect(0, 0, wc.width, wc.height);
+}
+
+/* ── Canvas splash particles — fires at transition pivot ─────
+   When panel reverses from up→right, a burst of cyan droplets
+   spray from the top-right corner (like water hitting a wall).
+─────────────────────────────────────────────────────────────── */
+function splash(x, y, count) {
+  const sc = document.createElement('canvas');
+  const R = 180;
+  sc.width = R*2; sc.height = R*2;
+  sc.style.cssText = `position:fixed;left:${x-R}px;top:${y-R}px;
+    pointer-events:none;z-index:810;`;
+  document.body.appendChild(sc);
+  const ctx = sc.getContext('2d');
+
+  const pts = Array.from({length: count || 18}, () => {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 5;
+    return {
+      x: R, y: R,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 3,   // bias upward
+      r:  1.5 + Math.random() * 3.5,
+      life: 1,
+      col: Math.random() < 0.5 ? '#5BCCFF' : '#90DFFF',
+    };
+  });
+
+  function frame() {
+    ctx.clearRect(0, 0, R*2, R*2);
+    let alive = false;
+    pts.forEach(p => {
+      if (p.life <= 0) return;
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.vy += 0.18;   // gravity
+      p.vx *= 0.97;   // drag
+      p.life -= 0.033;
+      if (p.life > 0) { alive = true; }
+      // Teardrop shape — elongate in direction of travel
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(Math.atan2(p.vy, p.vx));
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.r * 1.8, p.r, 0, 0, Math.PI*2);
+      const a = Math.max(0, p.life);
+      ctx.fillStyle = p.r > 3
+        ? `rgba(91,204,255,${a})`
+        : `rgba(160,235,255,${a})`;
+      ctx.fill();
+      ctx.restore();
+    });
+    if (alive) requestAnimationFrame(frame);
+    else sc.remove();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ── Ripple rings — expand from click origin ─────────────── */
+function spawnRipples(x, y) {
+  [0, 120, 240].forEach(delay => {
+    setTimeout(() => {
+      const r = document.createElement('div');
+      r.className = 'ripple-ring';
+      r.style.left = x + 'px';
+      r.style.top  = y + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 920);
+    }, delay);
+  });
+}
+
+/* ── Transition helper ───────────────────────────────────── */
+function tpSet(transform, transition) {
+  tp.style.transition = transition || 'none';
+  tp.style.transform  = transform;
+}
+
+async function openSection(overlayId, clickX, clickY) {
+  if (busy) return;
+  busy = true;
+
+  const cx = clickX || window.innerWidth/2;
+  const cy = clickY || window.innerHeight/2;
+
+  /* Burst ring + ripples at click point */
+  const br = $('burst');
+  br.style.left = cx + 'px';
+  br.style.top  = cy + 'px';
+  br.classList.remove('fire');
+  void br.offsetWidth;
+  br.classList.add('fire');
+  spawnRipples(cx, cy);
+
+  /* Phase 1: water surge UP from bottom */
+  tp.classList.remove('phase-bottom');
+  tp.classList.add('phase-right');
+  tpSet('translateY(100%)');
+  await sleep(16);
+  startWave('top');
+  tpSet('translateY(0)', 'transform .38s var(--surge)');
+  await sleep(400);
+
+  /* Swap content (hidden behind panel) */
+  switchOverlay(overlayId);
+
+  /* Splash at the top as it reverses direction */
+  splash(window.innerWidth * 0.8, 80, 22);
+
+  /* Phase 2: panel flows to the RIGHT */
+  stopWave();
+  tp.classList.remove('phase-right');
+  startWave('right');
+  await sleep(16);
+  tpSet('translateX(100%)', 'transform .42s var(--flow)');
+  await sleep(440);
+
+  stopWave();
+  tpSet('translateY(100%)');
+  tp.classList.add('phase-right');
+  busy = false;
+  animateOverlayIn(overlayId);
+}
+
+async function closeSection() {
+  if (busy || !activeOverlay) return;
+  busy = true;
+
+  /* Phase 1: panel surges in from LEFT */
+  tp.classList.remove('phase-right');
+  tp.classList.add('phase-bottom');
+  tpSet('translateX(-100%)');
+  await sleep(16);
+  startWave('top');
+  tpSet('translateX(0)', 'transform .38s var(--surge)');
+  await sleep(400);
+
+  hideOverlay();
+
+  splash(window.innerWidth * 0.2, window.innerHeight - 80, 18);
+
+  /* Phase 2: panel flows DOWN */
+  stopWave();
+  tp.classList.remove('phase-bottom');
+  await sleep(16);
+  tpSet('translateY(100%)', 'transform .42s var(--flow)');
+  await sleep(440);
+
+  stopWave();
+  tpSet('translateY(100%)');
+  tp.classList.add('phase-right');
+  busy = false;
+}
+
+/* ── Overlay show / hide ─────────────────────────────────── */
+function switchOverlay(id) {
+  /* hide all */
+  qsa('.overlay').forEach(o => o.classList.remove('visible'));
+  /* reset ov-items */
+  qsa('.ov-item').forEach(el => el.classList.remove('ov-in'));
+  qsa('.proof-item').forEach(el => el.classList.remove('proof-in'));
+  /* reset header lines */
+  qsa('.ov-header-line').forEach(l => l.classList.remove('in'));
+
+  if (id) {
+    const ov = $(id);
+    if (ov) ov.classList.add('visible');
+    activeOverlay = id;
+    /* Update nav */
+    $('nav-back').style.display = 'flex';
+    $('nav-section').style.display = 'block';
+    $('nav-section').textContent = ov.querySelector('.ov-title')?.textContent || '';
+  }
+}
+
+function hideOverlay() {
+  qsa('.overlay').forEach(o => o.classList.remove('visible'));
+  qsa('.ov-item').forEach(el => el.classList.remove('ov-in'));
+  qsa('.proof-item').forEach(el => el.classList.remove('proof-in'));
+  $('nav-back').style.display = 'none';
+  $('nav-section').style.display = 'none';
+  $('nav-section').textContent = '';
+  activeOverlay = null;
+}
+
+/* ── Overlay content entrance animation ─────────────────── */
+function animateOverlayIn(id) {
+  const ov = $(id); if (!ov) return;
+
+  /* Header line */
+  setTimeout(() => ov.querySelector('.ov-header-line')?.classList.add('in'), 50);
+
+  /* ov-items — tighter 55ms stagger, feels like water filling */
+  const items = Array.from(ov.querySelectorAll('.ov-item'));
+  items.forEach((el, i) => {
+    setTimeout(() => el.classList.add('ov-in'), 60 + i * 55);
+  });
+
+  /* Proof items — stagger 40ms each, slightly after the card itself */
+  if (id === 'ov-skills') {
+    const proofItems = Array.from(ov.querySelectorAll('.proof-item'));
+    proofItems.forEach((el, i) => {
+      setTimeout(() => el.classList.add('proof-in'), 180 + i * 40);
+    });
+  }
+}
+
+/* ── Nav item click ─────────────────────────────────────── */
+qsa('.p3-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    const id = this.dataset.target;
+    if (id) openSection(id, e.clientX, e.clientY);
+  });
+});
+
+/* ── Back / home ────────────────────────────────────────── */
+function goHome() {
+  if (activeOverlay) closeSection();
+}
+
+/* ── Keyboard: ESC to close ─────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && activeOverlay) closeSection();
+});
+
+/* ── Spawn bubbles ──────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  spawnBubbles('main-bub', 12);
+  spawnBubbles('exp-bub',  8);
+  spawnBubbles('skills-bub', 6);
+  spawnBubbles('proj-bub',  8);
+});
+
+/* ================================================================
+   ENHANCEMENT A — Cursor glow tracks mouse
+================================================================ */
+const glowEl = $('cursor-glow');
+if (glowEl) {
+  document.addEventListener('mousemove', e => {
+    glowEl.style.transform = `translate(${e.clientX - 240}px,${e.clientY - 240}px)`;
+  });
+}
+
+/* ================================================================
+   ENHANCEMENT B — Hero parallax
+   Name moves most, title less, about text least.
+   Small enough values that .mask overflow:hidden never clips.
+================================================================ */
+(function(){
+  const mainLeft = document.querySelector('.main-left');
+  if (!mainLeft) return;
+  const layers = [['h1', 7, 4], ['h2', 4.5, 2.5], ['h3', 2.5, 1.5]];
+  mainLeft.addEventListener('mousemove', e => {
+    const r = mainLeft.getBoundingClientRect();
+    const cx = (e.clientX - r.left) / r.width  - 0.5;
+    const cy = (e.clientY - r.top)  / r.height - 0.5;
+    layers.forEach(([id, sy, sx]) => {
+      const el = $(id); if (!el) return;
+      el.style.transform = `translateY(${cy * sy}px) translateX(${cx * sx}px)`;
+      el.style.transition = 'transform .25s ease-out';
+    });
+  });
+  mainLeft.addEventListener('mouseleave', () => {
+    layers.forEach(([id]) => {
+      const el = $(id); if (!el) return;
+      el.style.transform = 'translateY(0) translateX(0)';
+      el.style.transition = 'transform .6s var(--flow)';
+    });
+  });
+})();
+
+/* ================================================================
+   ENHANCEMENT C — Hero name glitch flash (fires once after load)
+================================================================ */
+const glitchDelay = 820 + (5 * 70) + 600; // heroStart + cascade + buffer
+setTimeout(() => {
+  const nameEl = document.querySelector('.hero-name');
+  if (!nameEl) return;
+  nameEl.classList.add('glitch');
+  setTimeout(() => nameEl.classList.remove('glitch'), 500);
+}, glitchDelay);
+
+</script>
+</body>
+</html>
