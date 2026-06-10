@@ -25,7 +25,7 @@
   --muted:    #7888A8;
   --dim:      #2E4060;
   /* Water/slush easings */
-  --surge:    cubic-bezier(0.42,0,0.1,1);      /* water rushing — builds weight */
+  --surge:    cubic-bezier(0.05,0,0.1,1);       /* explosive water rush — fast start, long decel */
   --flow:     cubic-bezier(0.25,0.8,0.25,1);   /* water flowing out — smooth */
   --slosh:    cubic-bezier(0.34,1.45,0.64,1);  /* sloshing — slight overshoot */
   --wobble:   cubic-bezier(0.34,1.6,0.64,1);   /* slushy wobble — bigger overshoot */
@@ -84,8 +84,18 @@ h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:.04em}
   filter:blur(2px);
 }
 #tp.phase-right::after{top:0;right:-2px;bottom:0;width:12px}
-#tp.phase-bottom::after{bottom:-2px;left:0;right:0;height:12px;
-  background:linear-gradient(0deg,transparent,rgba(91,200,255,.4),rgba(180,240,255,.7))}
+#tp.phase-left::after{top:0;left:-2px;bottom:0;width:12px;
+  background:linear-gradient(-90deg,transparent,rgba(91,200,255,.4),rgba(180,240,255,.7))}
+
+/* ================================================================
+   TRANSITION PANEL BUBBLES — float up during the sweep
+================================================================ */
+.tp-bub {
+  position:absolute;border-radius:50%;pointer-events:none;
+  border:1px solid rgba(255,255,255,.28);
+  background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.18) 0%,rgba(200,240,255,.06) 55%,transparent 100%);
+  animation:bub-rise linear forwards;
+}
 
 /* ================================================================
    BURST RING — appears at click origin, expands on transition
@@ -289,67 +299,91 @@ h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:.04em}
   border-bottom:1px solid var(--border);
 }
 
-/* P3R menu items */
+/* ── P3R battle-menu style items ─────────────────────────── */
 .p3-item{
-  display:flex;align-items:center;gap:0;
-  padding:10px 0;
-  border-bottom:1px solid rgba(46,100,220,.08);
-  cursor:pointer;
   position:relative;overflow:hidden;
-  user-select:none;
+  cursor:pointer;user-select:none;
+  padding:6px 0;
+  border:none;
 }
-.p3-item::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;
-  width:0;background:rgba(42,100,220,.07);
-  transition:width .2s var(--snap);
-}
-.p3-item:hover::before{width:100%}
 
-.p3-tri{
-  font-size:9px;color:var(--gold);
-  opacity:0;transform:translateX(-6px);
-  transition:opacity .15s,transform .15s;
-  flex-shrink:0;margin-right:0;width:16px;
+/* Diagonal slash accent — like the P3R menu item highlight */
+.p3-item::before{
+  content:'';position:absolute;
+  top:-20%;bottom:-20%;left:-40px;right:-10px;
+  background:linear-gradient(90deg,transparent 0%,rgba(91,159,255,.08) 40%,rgba(91,159,255,.12) 100%);
+  transform:skewX(-14deg) scaleX(0);
+  transform-origin:left;
+  transition:transform .25s var(--snap);
+  z-index:0;
 }
+.p3-item:hover::before{transform:skewX(-14deg) scaleX(1)}
+
+/* Gold slash bar — the bright accent line */
+.p3-item::after{
+  content:'';position:absolute;
+  left:0;top:10%;bottom:10%;
+  width:3px;
+  background:linear-gradient(180deg,var(--gold),var(--blueh));
+  transform:scaleY(0);transform-origin:bottom;
+  transition:transform .28s var(--slosh);
+  z-index:1;
+}
+.p3-item:hover::after{transform:scaleY(1)}
+
+/* Hidden — no longer used, flash bar replaces it */
+.p3-tri{ display:none }
+
 .p3-label{
   font-family:'Rajdhani',sans-serif;
-  font-size:clamp(24px,2.8vw,34px);font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;
-  color:var(--muted);
-  transition:color .15s,transform .15s;
+  font-weight:700;font-style:italic;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:rgba(91,159,255,.3);
+  line-height:1;
+  transition:color .2s,transform .35s var(--slosh);
+  position:relative;z-index:1;
+  display:block;
 }
+
 .p3-sub{
   font-family:'Rajdhani',sans-serif;
   font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--dim);margin-left:auto;
+  color:var(--dim);
+  position:relative;z-index:1;
   transition:color .15s;
+  display:block;
+  margin-top:1px;
 }
 
-.p3-item:hover .p3-tri    {opacity:1;transform:translateX(0)}
-/* Slosh — label overshoots then settles, like water pushed by a wave */
-.p3-item:hover .p3-label  {
+/* Size + indent cascade — largest → smallest, increasing offset */
+.p3-item:nth-child(2) .p3-label{font-size:clamp(38px,4.2vw,58px);padding-left:0}
+.p3-item:nth-child(3) .p3-label{font-size:clamp(30px,3.2vw,44px);padding-left:14px}
+.p3-item:nth-child(4) .p3-label{font-size:clamp(24px,2.6vw,36px);padding-left:26px}
+.p3-item:nth-child(2) .p3-sub{padding-left:2px}
+.p3-item:nth-child(3) .p3-sub{padding-left:16px}
+.p3-item:nth-child(4) .p3-sub{padding-left:28px}
+
+.p3-item:hover .p3-label{
   color:var(--text);
-  transform:translateX(4px);
-  transition:color .15s, transform .35s var(--slosh);
+  transform:translateX(10px);
 }
-.p3-item:hover .p3-sub    {color:var(--muted)}
-
-/* Scanline on item hover — P3R cursor */
-.p3-item::after{
-  content:'';position:absolute;left:0;right:0;top:0;
-  height:1px;background:var(--blueh);
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .2s var(--snap);opacity:.5;
-}
-.p3-item:hover::after{transform:scaleX(1)}
+.p3-item:hover .p3-sub{color:var(--muted)}
 
 /* Mobile: show menu below hero */
 @media(max-width:900px){
   html,body{overflow:auto}
   #main-page{grid-template-columns:1fr;overflow:visible;position:relative;top:0;height:auto}
-  .main-left{border-right:none;border-bottom:1px solid var(--border);justify-content:flex-start;min-height:auto;padding-top:80px}
+  .main-left{border-right:none;border-bottom:1px solid var(--border);justify-content:flex-start;min-height:auto;padding-top:72px}
   .main-right{padding:40px 32px}
   .overlay{top:56px}
+  /* Tighten margins so CTAs stay in first fold */
+  .hero-contact{margin-top:16px}
+  .about-text{font-size:14px;margin-bottom:0}
+}
+@media(max-width:480px){
+  .main-left{padding:72px 24px 24px}
+  .about-text{font-size:13px;line-height:1.65}
+  .hc-link{min-width:130px;padding:11px 18px;font-size:13px}
 }
 
 /* ================================================================
@@ -702,23 +736,59 @@ h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:.04em}
 
 /* ── HERO CONTACT ROW ───────────────────────────────── */
 .hero-contact {
-  display:flex;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap;
+  display:flex;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap;
 }
 .hc-wrap { display:contents }
+
+/* ── P3R-style CTAs ────────────────────────────────────── */
 .hc-link {
-  display:flex;align-items:center;gap:7px;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:10px;
   font-family:'Rajdhani',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  font-size:14px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
   color:var(--muted);text-decoration:none;
-  padding:8px 16px;
-  border:1px solid rgba(91,159,255,.25);
-  transition:color .15s,border-color .15s,box-shadow .15s;
+  padding:13px 24px;
+  border:1px solid rgba(91,159,255,.2);
+  transition:color .15s,border-color .2s;
+  min-width:160px;
 }
-.hc-link:hover {
-  color:var(--blueh);
-  border-color:var(--blueh);
-  box-shadow:0 0 10px rgba(91,159,255,.2);
+/* Flood fill from left — P3R surge */
+.hc-link::before {
+  content:'';position:absolute;inset:0;
+  background:rgba(42,100,220,.1);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .22s var(--snap);
 }
+/* Scanline sweep at top */
+.hc-link::after {
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:var(--blueh);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .2s var(--snap);
+}
+.hc-link:hover { color:var(--text);border-color:rgba(91,159,255,.5); }
+.hc-link:hover::before { transform:scaleX(1); }
+.hc-link:hover::after  { transform:scaleX(1); }
+
+/* Triangle indicator */
+.hc-tri {
+  font-size:9px;color:var(--gold);
+  opacity:0;transform:translateX(-8px);
+  transition:opacity .15s,transform .2s var(--slosh);
+  position:relative;z-index:1;flex-shrink:0;
+}
+.hc-link:hover .hc-tri { opacity:1;transform:translateX(0); }
+.hc-lbl { position:relative;z-index:1; }
+
+/* Primary CTA (Email) — gold treatment */
+.hc-primary {
+  border-color:rgba(201,162,39,.3);
+  color:var(--muted);
+}
+.hc-primary::before { background:rgba(201,162,39,.08); }
+.hc-primary::after  { background:var(--gold); }
+.hc-primary:hover   { color:var(--gold);border-color:rgba(201,162,39,.7); }
 
 /* ── CONTACT overlay ────────────────────────────────── */
 .contact-body{
@@ -909,8 +979,14 @@ h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:.04em}
     <!-- Contact inline -->
     <div class="mask" style="margin-top:20px">
       <div class="hero-contact lift" id="h5">
-        <a href="mailto:hiero.alvin@gmail.com" class="hc-link">✉ &nbsp;Email</a>
-        <a href="https://www.linkedin.com/in/alvin-hiero-47a4a353/" class="hc-link" target="_blank">in &nbsp;LinkedIn</a>
+        <a href="mailto:hiero.alvin@gmail.com" class="hc-link hc-primary">
+          <span class="hc-tri">▶</span>
+          <span class="hc-lbl">✉ &nbsp;Email</span>
+        </a>
+        <a href="https://www.linkedin.com/in/alvin-hiero-47a4a353/" class="hc-link" target="_blank">
+          <span class="hc-tri">▶</span>
+          <span class="hc-lbl">in &nbsp;LinkedIn</span>
+        </a>
       </div>
     </div>
 
@@ -921,19 +997,16 @@ h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:.04em}
     <div class="menu-label">Navigate</div>
 
     <div class="p3-item" data-target="ov-experience">
-      <span class="p3-tri">▶</span>
       <span class="p3-label">Experience</span>
-      <span class="p3-sub">12 yrs</span>
+      <span class="p3-sub">12 yrs &nbsp;·&nbsp; 5 companies</span>
     </div>
     <div class="p3-item" data-target="ov-skills">
-      <span class="p3-tri">▶</span>
       <span class="p3-label">Skills</span>
-      <span class="p3-sub">Craft</span>
+      <span class="p3-sub">Proof of work</span>
     </div>
     <div class="p3-item" data-target="ov-projects">
-      <span class="p3-tri">▶</span>
       <span class="p3-label">Projects</span>
-      <span class="p3-sub">Work</span>
+      <span class="p3-sub">12 shipped</span>
     </div>
   </div>
 
@@ -1374,6 +1447,24 @@ function spawnBubbles(containerId, count) {
   });
 }
 
+/* ── Panel bubbles — white gradient orbs during transition ───── */
+function spawnPanelBubbles() {
+  tp.querySelectorAll('.tp-bub').forEach(b => b.remove());
+  [8,12,6,16,10,7,14,9,18,6,11,8,13,5,10].forEach(sz => {
+    const b = document.createElement('div');
+    b.className = 'tp-bub';
+    b.style.cssText = `width:${sz}px;height:${sz}px;`
+      + `left:${4 + Math.random()*92}%;bottom:${-sz}px;`
+      + `animation-duration:${3 + Math.random()*4}s;`
+      + `animation-delay:${-(Math.random()*2.5)}s;`
+      + `opacity:${0.5 + Math.random()*0.5}`;
+    tp.appendChild(b);
+  });
+}
+function clearPanelBubbles() {
+  tp.querySelectorAll('.tp-bub').forEach(b => b.remove());
+}
+
 /* ── Canvas wave — rides the leading edge of #tp ─────────────
    Draws a multi-frequency sine wave that scrolls continuously,
    giving the panel a "water surface" leading edge.
@@ -1390,57 +1481,90 @@ const wCtx = wc.getContext('2d');
 
 function resizeWc() {
   wc.width  = window.innerWidth  + 4;
-  wc.height = 64;
+  wc.height = 90;  /* taller = more dramatic wave crest */
 }
 resizeWc();
 window.addEventListener('resize', resizeWc);
 
 function drawWave(phase) {
-  // phase: 'top' (panel entering from below) | 'right' (panel exiting right)
   wCtx.clearRect(0, 0, wc.width, wc.height);
-  const g = wCtx.createLinearGradient(0, 0, 0, 64);
-  g.addColorStop(0,   'rgba(0,200,240,0)');
-  g.addColorStop(0.5, 'rgba(15,130,220,0.55)');
-  g.addColorStop(1,   '#0D38B8');
+  const g = wCtx.createLinearGradient(0, 0, 0, 90);
+  g.addColorStop(0,    'rgba(0,200,240,0)');
+  g.addColorStop(0.35, 'rgba(0,180,255,0.4)');
+  g.addColorStop(0.65, 'rgba(15,130,220,0.7)');
+  g.addColorStop(1,    '#0D38B8');
   wCtx.fillStyle = g;
   wCtx.beginPath();
-  wCtx.moveTo(-2, 64);
-  for (let x = 0; x <= wc.width; x += 3) {
-    // Three overlapping sine waves — creates slushy, organic edge
-    const y = 32
-      + 14 * Math.sin(x * 0.013 + wOff)
-      + 7  * Math.sin(x * 0.031 + wOff * 1.7)
-      + 4  * Math.sin(x * 0.059 + wOff * 2.4)
-      + 2  * Math.sin(x * 0.11  + wOff * 0.8);
+  wCtx.moveTo(-2, 90);
+  for (let x = 0; x <= wc.width; x += 2) {
+    /* Bigger amplitude = choppier, more dramatic water surface */
+    const y = 42
+      + 24 * Math.sin(x * 0.012 + wOff)
+      + 12 * Math.sin(x * 0.029 + wOff * 1.8)
+      + 7  * Math.sin(x * 0.055 + wOff * 2.6)
+      + 4  * Math.sin(x * 0.10  + wOff * 0.7);
     wCtx.lineTo(x, y);
   }
-  wCtx.lineTo(wc.width + 2, 64);
+  wCtx.lineTo(wc.width + 2, 90);
   wCtx.closePath();
   wCtx.fill();
 }
 
+/* Direction of the wavy edge: 'left' = leading edge on left (panel enters from right)
+                                 'right' = leading edge on right (panel enters from left) */
+let waveEdgeDir = null;
+
+function buildWaveClip(dir) {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const amp = 38;
+  const steps = 36;
+
+  if (dir === 'left') {
+    /* Wavy left edge — panel enters from the right */
+    const pts = [];
+    for (let i = 0; i <= steps; i++) {
+      const y = (i / steps) * (H + 80) - 40;
+      const x = amp * Math.sin(y * 0.011 + wOff * 2.4)
+              + amp * 0.4 * Math.sin(y * 0.026 + wOff * 1.6);
+      pts.push(`${x}px ${y}px`);
+    }
+    pts.push(`${W + 100}px ${H + 40}px`);
+    pts.push(`${W + 100}px -40px`);
+    return `polygon(${pts.join(',')})`;
+  } else {
+    /* Wavy right edge — panel enters from the left */
+    const pts = [`-100px -40px`, `-100px ${H + 40}px`];
+    for (let i = steps; i >= 0; i--) {
+      const y = (i / steps) * (H + 80) - 40;
+      const x = W - (amp * Math.sin(y * 0.011 + wOff * 2.4)
+                   + amp * 0.4 * Math.sin(y * 0.026 + wOff * 1.6));
+      pts.push(`${x}px ${y}px`);
+    }
+    return `polygon(${pts.join(',')})`;
+  }
+}
+
 function waveLoop() {
   if (!wRunning) return;
-  wOff += 0.055;   // scroll speed — slower = more sluggish/slushy
+  wOff += 0.09;
   drawWave();
+  if (waveEdgeDir) tp.style.clipPath = buildWaveClip(waveEdgeDir);
   requestAnimationFrame(waveLoop);
 }
 
 function startWave(phase) {
-  // Position canvas at the leading edge
-  if (phase === 'top') {
-    // Panel entering from bottom → wave is at TOP of panel
-    wc.style.top    = '-48px';
-    wc.style.bottom = 'auto';
-    wc.style.transform = 'none';
-    wc.style.width  = '';
-  } else {
-    // Panel exiting right → wave at RIGHT edge (rotated)
-    wc.style.top       = '0';
-    wc.style.bottom    = '0';
-    wc.style.right     = '-48px';
+  waveEdgeDir = phase; /* 'left' or 'right' */
+  /* Keep canvas for color glow at the edge */
+  wc.style.left = wc.style.right = wc.style.top = wc.style.bottom = 'auto';
+  if (phase === 'right') {
+    wc.style.top = '0'; wc.style.bottom = '0'; wc.style.right = '-48px';
     wc.style.transform = 'rotate(90deg) translateY(-50%) scaleX(3)';
     wc.style.transformOrigin = 'right center';
+  } else {
+    wc.style.top = '0'; wc.style.bottom = '0'; wc.style.left = '-48px';
+    wc.style.transform = 'rotate(-90deg) translateY(50%) scaleX(3)';
+    wc.style.transformOrigin = 'left center';
   }
   wRunning = true;
   waveLoop();
@@ -1448,6 +1572,8 @@ function startWave(phase) {
 
 function stopWave() {
   wRunning = false;
+  waveEdgeDir = null;
+  tp.style.clipPath = '';
   wCtx.clearRect(0, 0, wc.width, wc.height);
 }
 
@@ -1534,44 +1660,36 @@ async function openSection(overlayId, clickX, clickY) {
   const cx = clickX || window.innerWidth/2;
   const cy = clickY || window.innerHeight/2;
 
-  /* Burst ring + ripples at click point */
+  /* Burst ring + ripples */
   const br = $('burst');
-  br.style.left = cx + 'px';
-  br.style.top  = cy + 'px';
-  br.classList.remove('fire');
-  void br.offsetWidth;
-  br.classList.add('fire');
+  br.style.left = cx + 'px'; br.style.top = cy + 'px';
+  br.classList.remove('fire'); void br.offsetWidth; br.classList.add('fire');
   spawnRipples(cx, cy);
 
-  /* Phase 1: water surge UP from bottom */
-  tp.classList.remove('phase-bottom');
+  /* Forward → enter from LEFT, sweep RIGHT — wave on leading right edge */
+  tp.classList.remove('phase-right','phase-bottom','phase-left');
   tp.classList.add('phase-right');
-  tpSet('translateY(100%)');
+  tpSet('translateX(-105%) scaleY(1)');
+  spawnPanelBubbles();
   await sleep(16);
-  startWave('top');
-  tpSet('translateY(0)', 'transform .38s var(--surge)');
-  await sleep(400);
-
-  /* Swap content (hidden behind panel) */
-  switchOverlay(overlayId);
-
-  /* Splash at the top as it reverses direction */
-  splash(window.innerWidth * 0.8, 80, 22);
-
-  /* Phase 2: panel flows to the RIGHT */
-  stopWave();
-  tp.classList.remove('phase-right');
   startWave('right');
-  await sleep(16);
-  tpSet('translateX(100%)', 'transform .42s var(--flow)');
-  await sleep(440);
+  tpSet('translateX(0) scaleY(1.03)', 'transform .22s var(--surge)');
+  await sleep(240);
 
+  /* Content swap behind panel */
+  switchOverlay(overlayId);
   stopWave();
-  tpSet('translateY(100%)');
-  tp.classList.add('phase-right');
+
+  /* Exit to RIGHT — water flows away */
+  await sleep(16);
+  tpSet('translateX(105%) scaleY(0.97)', 'transform .22s var(--flow)');
+  await sleep(240);
+
+  clearPanelBubbles();
+  tpSet('translateX(-105%)');
+  tp.classList.remove('phase-right');
   busy = false;
   animateOverlayIn(overlayId);
-  /* Push browser history so back button returns to homepage */
   history.pushState({ overlay: overlayId }, '', '#' + overlayId);
 }
 
@@ -1579,31 +1697,29 @@ async function closeSection() {
   if (busy || !activeOverlay) return;
   busy = true;
 
-  /* Phase 1: panel surges in from LEFT */
-  tp.classList.remove('phase-right');
-  tp.classList.add('phase-bottom');
-  tpSet('translateX(-100%)');
+  /* Back → enter from RIGHT, sweep LEFT — wave on leading left edge */
+  tp.classList.remove('phase-right','phase-bottom','phase-left');
+  tp.classList.add('phase-left');
+  tpSet('translateX(105%) scaleY(1)');
+  spawnPanelBubbles();
   await sleep(16);
-  startWave('top');
-  tpSet('translateX(0)', 'transform .38s var(--surge)');
-  await sleep(400);
+  startWave('left');
+  tpSet('translateX(0) scaleY(1.03)', 'transform .22s var(--surge)');
+  await sleep(240);
 
+  /* Hide overlay behind panel */
   hideOverlay();
-
-  splash(window.innerWidth * 0.2, window.innerHeight - 80, 18);
-
-  /* Phase 2: panel flows DOWN */
   stopWave();
-  tp.classList.remove('phase-bottom');
+
+  /* Exit to LEFT — water recedes */
   await sleep(16);
-  tpSet('translateY(100%)', 'transform .42s var(--flow)');
-  await sleep(440);
+  tpSet('translateX(-105%) scaleY(0.97)', 'transform .22s var(--flow)');
+  await sleep(240);
 
-  stopWave();
-  tpSet('translateY(100%)');
-  tp.classList.add('phase-right');
+  clearPanelBubbles();
+  tpSet('translateX(105%)');
+  tp.classList.remove('phase-left');
   busy = false;
-  /* Clear hash when returning to homepage */
   history.pushState({ overlay: null }, '', window.location.pathname);
 }
 
