@@ -303,7 +303,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
 .p3-item{
   position:relative;overflow:hidden;
   cursor:pointer;user-select:none;
-  padding:6px 0;
+  padding:6px 0 6px 10px; /* left gap keeps ::after bar outside text */
   border:none;
 }
 
@@ -355,13 +355,10 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
   margin-top:1px;
 }
 
-/* Size + indent cascade — largest → smallest, increasing offset */
-.p3-item:nth-child(2) .p3-label{font-size:clamp(38px,4.2vw,58px);padding-left:0}
-.p3-item:nth-child(3) .p3-label{font-size:clamp(30px,3.2vw,44px);padding-left:14px}
-.p3-item:nth-child(4) .p3-label{font-size:clamp(24px,2.6vw,36px);padding-left:26px}
-.p3-item:nth-child(2) .p3-sub{padding-left:2px}
-.p3-item:nth-child(3) .p3-sub{padding-left:16px}
-.p3-item:nth-child(4) .p3-sub{padding-left:28px}
+/* Size cascade — largest → smallest, all left-aligned */
+.p3-item:nth-child(2) .p3-label{font-size:clamp(38px,4.2vw,58px)}
+.p3-item:nth-child(3) .p3-label{font-size:clamp(30px,3.2vw,44px)}
+.p3-item:nth-child(4) .p3-label{font-size:clamp(24px,2.6vw,36px)}
 
 .p3-item:hover .p3-label{
   color:var(--text);
@@ -373,17 +370,25 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
 @media(max-width:900px){
   html,body{overflow:auto}
   #main-page{grid-template-columns:1fr;overflow:visible;position:relative;top:0;height:auto}
-  .main-left{border-right:none;border-bottom:1px solid var(--border);justify-content:flex-start;min-height:auto;padding-top:72px}
-  .main-right{padding:40px 32px}
+  .main-left{border-right:none;border-bottom:1px solid var(--border);justify-content:flex-start;min-height:auto;padding-top:64px}
+  .main-right{padding:32px}
   .overlay{top:56px}
-  /* Tighten margins so CTAs stay in first fold */
-  .hero-contact{margin-top:16px}
-  .about-text{font-size:14px;margin-bottom:0}
+  .hero-contact{margin-top:14px}
+  .about-text{font-size:13px;margin-bottom:0;line-height:1.7}
+  /* Shorter vertical spacing between hero elements */
+  .mask{margin-bottom:8px!important}
+  #h1{margin-bottom:6px!important}
 }
 @media(max-width:480px){
-  .main-left{padding:72px 24px 24px}
-  .about-text{font-size:13px;line-height:1.65}
-  .hc-link{min-width:130px;padding:11px 18px;font-size:13px}
+  .main-left{padding:60px 20px 20px}
+  .hero-name{font-size:clamp(44px,12vw,60px)!important;margin-bottom:8px}
+  .hero-title{font-size:13px!important;margin-bottom:0}
+  .about-text{font-size:12px;line-height:1.65;margin-bottom:0;
+    /* Show first 2 sentences only on very small screens */
+    display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .hc-link{min-width:120px;padding:10px 16px;font-size:12px}
+  /* Pause breathing on mobile — reduces layout jank */
+  #h1,#h2,#h3,#h4{animation:none}
 }
 
 /* ================================================================
@@ -624,8 +629,16 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
   padding:24px 22px;position:relative;overflow:hidden;
   text-decoration:none;display:block;
   transition:border-color .15s,transform .15s;
-  /* P3R cut corners — consistent with all other UI elements */
-  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  /* Asymmetric shard-glass — each corner has a different cut, feels like broken glass */
+  clip-path:polygon(
+    0 0,
+    calc(100% - 22px) 0,    /* top-right: large diagonal cut */
+    100% 22px,
+    100% calc(100% - 7px),  /* right side near bottom */
+    calc(100% - 7px) 100%,  /* bottom-right: tiny cut */
+    16px 100%,              /* bottom-left: medium cut */
+    0 calc(100% - 16px)
+  );
 }
 .proj-card:hover{
   border-color:rgba(91,159,255,.35);
@@ -738,14 +751,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
    P3R JOY LAYER
 ================================================================ */
 
-/* ── Nav selector cursor — the physical P3R pointer ─── */
-#nav-sel{
-  position:absolute;left:0;width:3px;
-  background:linear-gradient(180deg,var(--gold),var(--blueh));
-  pointer-events:none;opacity:0;z-index:10;
-  transition:top .18s var(--slosh),height .15s var(--slosh),opacity .12s;
-  box-shadow:0 0 8px var(--blueh);
-}
+/* Nav selector removed — ::after on .p3-item handles the left bar */
 
 /* ── Extreme hover dimming — non-hovered items vanish ─ */
 .main-right:has(.p3-item:hover) .p3-item:not(:hover) .p3-label{
@@ -1121,9 +1127,6 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
         style="transform-box:fill-box;transform-origin:center;animation:sh-c 19s ease-in-out infinite 5s"/>
     </svg>
 
-    <!-- Nav selector cursor -->
-    <div id="nav-sel"></div>
-
     <div class="menu-label">Navigate</div>
 
     <div class="p3-item" data-target="ov-experience">
@@ -1373,17 +1376,13 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
     <div class="ov-content">
       <div class="proj-grid">
 
-        <!-- ── RINGKAS ────────────────────────────────── -->
+        <!-- 01 · most recent first ──────────────────── -->
         <div class="proj-card feat ov-item">
           <div>
             <span class="proj-ghost">01</span>
             <div class="proj-type">AI Agent &nbsp;·&nbsp; Production</div>
             <div class="proj-name">RISA · Ringkas AI</div>
-            <p class="proj-desc">Indonesia's first AI mortgage assistant. RISA runs on WhatsApp and handles the full applicant intake: income, employment, liabilities, documents, eligibility. It routes a qualified lead to the right bank. Built from zero: conversation architecture, LangChain orchestration, white-label config layer per bank partner, LangSmith eval framework, and OKR/KPI structure. Live across 26 banks and 10 major property developers.</p>
-            <div class="proj-tags">
-              <span class="proj-tag">LangChain</span><span class="proj-tag">LangSmith</span>
-              <span class="proj-tag">WhatsApp API</span><span class="proj-tag">Mortgage</span><span class="proj-tag">B2B SaaS</span>
-            </div>
+            <p class="proj-desc">Indonesia's first AI mortgage assistant. RISA runs on WhatsApp and handles the full applicant intake: income, employment, liabilities, documents, eligibility. Routes qualified leads to the right bank. Built in the past 12 months: conversation architecture, LangChain orchestration, white-label config per bank partner, and a 5-evaluator LLM-as-judge pipeline (intent accuracy, hallucination detection, tone, answer accuracy, next-step guidance) that gates every prompt version before release. Live across 33 banks, achieving 15% session-to-warm-lead conversion.</p>
           </div>
           <img class="proj-feat-img" src="Projects/screenshots/Ringkas%20AI.png" alt="RISA · Ringkas AI">
         </div>
@@ -1392,130 +1391,96 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <span class="proj-ghost">02</span>
           <div class="proj-head">
             <div><div class="proj-type">Platform Design</div><div class="proj-name">Ringkas Platform</div></div>
-            <div class="proj-arrow">↗</div>
           </div>
-          <p class="proj-desc">Ringkas started as a single Ringkas-operated tool. As partner volume grew, that became a bottleneck. Designed the platform split: internal ops tool vs. client self-serve portal. Built the 7-phase capability migration map, role-based permission model, and session-based WABA billing. The architecture that lets bank partners onboard and configure without Ringkas ops intervention.</p>
+          <p class="proj-desc">Designed the platform split: internal ops tool vs. client self-serve portal. Built the 7-phase capability migration map, role-based permission model, and session-based WABA billing. The architecture that lets bank partners onboard and configure without Ringkas ops intervention.</p>
           <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Ringkas%20App.png" alt="Ringkas Platform"></div>
-          <div class="proj-tags"><span class="proj-tag">B2B Platform</span><span class="proj-tag">Architecture</span><span class="proj-tag">Roadmap</span></div>
         </div>
 
         <div class="proj-card ov-item">
           <span class="proj-ghost">03</span>
           <div class="proj-head">
-            <div><div class="proj-type">AI Quality</div><div class="proj-name">RISA Eval Framework</div></div>
-            <div class="proj-arrow">↗</div>
-          </div>
-          <p class="proj-desc">Shipping RISA revealed the core problem: how do you know if the AI is actually doing a good job? Built an LLM-as-judge eval system on LangSmith covering conversation quality, task completion rate, hallucination frequency, tone compliance, and escalation accuracy. Includes a real conversation dataset and a feedback loop. Failed sessions feed directly into prompt tuning.</p>
-          <div class="proj-tags"><span class="proj-tag">LangSmith</span><span class="proj-tag">LLM Evals</span><span class="proj-tag">Quality</span></div>
-        </div>
-
-        <!-- ── TRAVELOKA ──────────────────────────────── -->
-        <div class="proj-card ov-item">
-          <span class="proj-ghost">04</span>
-          <div class="proj-head">
             <div><div class="proj-type">Growth Product &nbsp;·&nbsp; Platform Rebuild</div><div class="proj-name">Traveloka Online Food Delivery</div></div>
-            <div class="proj-arrow">↗</div>
           </div>
-          <p class="proj-desc">100x in one year: 1,000 to 100,000 orders/day. The real challenge wasn't features. Traveloka's core systems ran on travel booking cadence, days to weeks. Food delivery runs on minutes. Rebuilt the order flow, payment/payout rails, logistics integration, and accounting model from scratch. Shipped the MVP in one month, pandemic, full remote.</p>
+          <p class="proj-desc">100x in one year: 1,000 to 100,000 orders/day. Traveloka's core systems ran on travel booking cadence. Food delivery runs on minutes. Rebuilt the order flow, payment/payout rails, logistics integration, and accounting model from scratch. Shipped the MVP in one month, pandemic, full remote.</p>
           <div class="proj-img-wrap">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Food%20Delivery-1.png" alt="Traveloka Food Delivery">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Food%20Delivery-2.png" alt="Traveloka Food Delivery">
           </div>
-          <div class="proj-tags"><span class="proj-tag">100x Growth</span><span class="proj-tag">Food Delivery</span><span class="proj-tag">OTA</span></div>
         </div>
 
         <div class="proj-card ov-item">
-          <span class="proj-ghost">05</span>
-          <div class="proj-head">
-            <div><div class="proj-type">Voucher &nbsp;·&nbsp; Loyalty</div><div class="proj-name">Traveloka Eats Voucher</div></div>
-            <div class="proj-arrow">↗</div>
-          </div>
-          <p class="proj-desc">Traveloka's original food product: a restaurant voucher and redemption system letting users spend Traveloka credits on dining. Different from the food delivery pivot. This was a slow-cycle discovery and redemption loop, serving users who wanted to use travel points for in-person dining experiences.</p>
-          <div class="proj-tags"><span class="proj-tag">Voucher</span><span class="proj-tag">Loyalty</span><span class="proj-tag">Restaurant</span><span class="proj-tag">OTA</span></div>
-        </div>
-
-        <div class="proj-card ov-item">
-          <span class="proj-ghost">06</span>
+          <span class="proj-ghost">04</span>
           <div class="proj-head">
             <div><div class="proj-type">Marketplace &nbsp;·&nbsp; Monetization</div><div class="proj-name">Traveloka Dine-In</div></div>
-            <div class="proj-arrow">↗</div>
           </div>
           <p class="proj-desc">Brought payment in-app for Traveloka's dine-in product. Combined TravelokaPay digital wallet with restaurant-funded promotions: restaurants pay the discount, Traveloka captures the transaction. Designed the partner onboarding flow, discount cap config, and reporting dashboard.</p>
           <div class="proj-img-wrap">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Dine%20in-1.png" alt="Traveloka Dine-In">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Dine%20in-2.png" alt="Traveloka Dine-In">
           </div>
-          <div class="proj-tags"><span class="proj-tag">50% MoM Growth</span><span class="proj-tag">Payments</span><span class="proj-tag">Promotions</span><span class="proj-tag">Restaurant</span></div>
         </div>
 
-        <!-- ── TOKOPEDIA ──────────────────────────────── -->
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">05</span>
+          <div class="proj-head">
+            <div><div class="proj-type">Voucher &nbsp;·&nbsp; Loyalty</div><div class="proj-name">Traveloka Eats Voucher</div></div>
+          </div>
+          <p class="proj-desc">Traveloka's original food product: a restaurant voucher and redemption system letting users spend Traveloka credits on dining. Slow-cycle discovery and redemption loop, distinct from the food delivery pivot.</p>
+        </div>
+
+        <div class="proj-card ov-item">
+          <span class="proj-ghost">06</span>
+          <div class="proj-head">
+            <div><div class="proj-type">CX Automation &nbsp;·&nbsp; Cost Reduction</div><div class="proj-name">Tokopedia Support Bot</div></div>
+          </div>
+          <p class="proj-desc">12 billion IDR Opex cut. Mapped Tokopedia's complaint taxonomy to find which ticket categories had deterministic resolution paths, built the conversation tree, defined escalation triggers, and shipped the bot. Resolves 33% of all customer complaint tickets without a human.</p>
+        </div>
+
         <div class="proj-card ov-item">
           <span class="proj-ghost">07</span>
           <div class="proj-head">
-            <div><div class="proj-type">CX Automation &nbsp;·&nbsp; Cost Reduction</div><div class="proj-name">Tokopedia Support Bot</div></div>
-            <div class="proj-arrow">↗</div>
+            <div><div class="proj-type">CX Product &nbsp;·&nbsp; Information Architecture</div><div class="proj-name">Tokopedia Help Center</div></div>
           </div>
-          <p class="proj-desc">12 billion IDR Opex cut. Mapped Tokopedia's complaint taxonomy to find which ticket categories had deterministic resolution paths, built the conversation tree, defined escalation triggers, and shipped the bot. Resolves 33% of all customer complaint tickets without a human. First self-service CX automation at Tokopedia's scale.</p>
-          <div class="proj-tags"><span class="proj-tag">12B IDR Saved</span><span class="proj-tag">Chatbot</span><span class="proj-tag">CX Ops</span><span class="proj-tag">E-Commerce</span></div>
+          <p class="proj-desc">600+ articles in a flat structure users couldn't navigate. Introduced smart search with intent matching, reclassified all 600 articles into a logical hierarchy with consistent naming. Ran alongside the chatbot — together moved the majority of low-complexity tickets to self-service.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Tokopedia%20Help%20Center.png" alt="Tokopedia Help Center"></div>
         </div>
 
         <div class="proj-card ov-item">
           <span class="proj-ghost">08</span>
           <div class="proj-head">
-            <div><div class="proj-type">CX Product &nbsp;·&nbsp; Information Architecture</div><div class="proj-name">Tokopedia Help Center</div></div>
-            <div class="proj-arrow">↗</div>
+            <div><div class="proj-type">PropTech &nbsp;·&nbsp; B2B Platform</div><div class="proj-name">Qlue Residential</div></div>
           </div>
-          <p class="proj-desc">600+ articles in a flat structure users couldn't navigate. Introduced smart search with intent matching, reclassified all 600 articles into a logical hierarchy with consistent naming. Ran alongside the chatbot project. Together they moved the majority of low-complexity tickets to self-service.</p>
-          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Tokopedia%20Help%20Center.png" alt="Tokopedia Help Center"></div>
-          <div class="proj-tags"><span class="proj-tag">Search</span><span class="proj-tag">IA</span><span class="proj-tag">CX</span><span class="proj-tag">Content Ops</span></div>
+          <p class="proj-desc">White-label residential management platform for property developers. Configurable modules for maintenance requests, visitor management, billing, and resident announcements. Secured contracts with 4 major developers.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Qlue%20Residential%20App.png" alt="Qlue Residential"></div>
         </div>
 
-        <!-- ── QLUE ───────────────────────────────────── -->
         <div class="proj-card ov-item">
           <span class="proj-ghost">09</span>
           <div class="proj-head">
-            <div><div class="proj-type">PropTech &nbsp;·&nbsp; B2B Platform</div><div class="proj-name">Qlue Residential</div></div>
-            <div class="proj-arrow">↗</div>
+            <div><div class="proj-type">GovTech &nbsp;·&nbsp; Civic Infrastructure</div><div class="proj-name">Jakarta Smart City Integration</div></div>
           </div>
-          <p class="proj-desc">White-label residential management platform for property developers. Configurable modules for maintenance requests, visitor management, billing, and resident announcements. Built demo environments, led client presentations, and secured contracts with 4 major developers.</p>
-          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Qlue%20Residential%20App.png" alt="Qlue Residential"></div>
-          <div class="proj-tags"><span class="proj-tag">4 Contracts</span><span class="proj-tag">White-Label</span><span class="proj-tag">PropTech</span><span class="proj-tag">B2B</span></div>
+          <p class="proj-desc">Integrated the Qlue citizen app with Jakarta Smart City's government ops dashboard. Citizen infrastructure reports sync in real time to city officers, tagged by district, category, and severity. Scaled to 500,000 users and 9,000 reports/day citywide.</p>
+          <div class="proj-img-wrap">
+            <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-1.png" alt="Jakarta Smart City">
+            <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-2.png" alt="Jakarta Smart City">
+          </div>
         </div>
 
         <div class="proj-card ov-item">
           <span class="proj-ghost">10</span>
           <div class="proj-head">
-            <div><div class="proj-type">GovTech &nbsp;·&nbsp; Civic Infrastructure</div><div class="proj-name">Jakarta Smart City Integration</div></div>
-            <div class="proj-arrow">↗</div>
+            <div><div class="proj-type">Fintech &nbsp;·&nbsp; Mobile &nbsp;·&nbsp; Regulatory</div><div class="proj-name">SOBATKU e-Wallet</div></div>
           </div>
-          <p class="proj-desc">Integrated the Qlue citizen app with Jakarta Smart City's government ops dashboard. Citizen infrastructure reports (potholes, flooding, garbage) sync in real time to city officers, tagged by district, category, and severity. Enables assignment and resolution tracking across Jakarta.</p>
-          <div class="proj-img-wrap">
-            <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-1.png" alt="Jakarta Smart City">
-            <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-2.png" alt="Jakarta Smart City">
-          </div>
-          <div class="proj-tags"><span class="proj-tag">GovTech</span><span class="proj-tag">API Integration</span><span class="proj-tag">Smart City</span><span class="proj-tag">Public Sector</span></div>
+          <p class="proj-desc">IT Project Manager for Bank Sahabat Sampoerna's e-wallet mobile app launch. Coordinated across business (product scope), legal (OJK e-wallet license process), and operations (KYC design, reconciliation). BSS's first move into digital payments.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Sobatku%20bank%20sahabat%20sampoerna.png" alt="SOBATKU e-Wallet"></div>
         </div>
 
-        <!-- ── BANK SAHABAT SAMPOERNA ─────────────────── -->
         <div class="proj-card ov-item">
           <span class="proj-ghost">11</span>
           <div class="proj-head">
             <div><div class="proj-type">Core Banking &nbsp;·&nbsp; Enterprise Migration</div><div class="proj-name">BSS · T24 CBS Replacement</div></div>
-            <div class="proj-arrow">↗</div>
           </div>
-          <p class="proj-desc">Full core banking system replacement at Bank Sahabat Sampoerna: Alphabits to Temenos T24. Acted as BA, tester, PM, and trainer across the Funding Module. Delivered Time Deposit data migration with zero data integrity issues. Managed 61 change requests under SDLC and co-led customer communication through the cutover.</p>
-          <div class="proj-tags"><span class="proj-tag">Temenos T24</span><span class="proj-tag">Data Migration</span><span class="proj-tag">SDLC</span><span class="proj-tag">Banking</span></div>
-        </div>
-
-        <div class="proj-card ov-item">
-          <span class="proj-ghost">12</span>
-          <div class="proj-head">
-            <div><div class="proj-type">Fintech &nbsp;·&nbsp; Mobile &nbsp;·&nbsp; Regulatory</div><div class="proj-name">SOBATKU e-Wallet</div></div>
-            <div class="proj-arrow">↗</div>
-          </div>
-          <p class="proj-desc">IT Project Manager for Bank Sahabat Sampoerna's e-wallet mobile app launch. Coordinated across business (product scope), legal (OJK e-wallet license process), and operations (KYC design, reconciliation). BSS's first move into digital payments before the major e-wallet players dominated.</p>
-          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Sobatku%20bank%20sahabat%20sampoerna.png" alt="SOBATKU e-Wallet"></div>
-          <div class="proj-tags"><span class="proj-tag">e-Wallet</span><span class="proj-tag">OJK License</span><span class="proj-tag">KYC</span><span class="proj-tag">Mobile</span></div>
+          <p class="proj-desc">Full core banking system replacement at Bank Sahabat Sampoerna: Alphabits to Temenos T24. Acted as BA, tester, PM, and trainer across the Funding Module. Delivered Time Deposit data migration with zero data integrity issues. Managed 61 change requests under SDLC.</p>
         </div>
 
       </div>
@@ -1960,23 +1925,6 @@ function resetStamp(el) {
   el.textContent = el.textContent; /* re-serialize to plain text */
 }
 
-/* ── Nav selector cursor ────────────────────────────── */
-const navSel = $('nav-sel');
-const mainRight = document.querySelector('.main-right');
-if (navSel && mainRight) {
-  qsa('.p3-item').forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      const pr = mainRight.getBoundingClientRect();
-      const ir = item.getBoundingClientRect();
-      navSel.style.top    = (ir.top  - pr.top)  + 'px';
-      navSel.style.height = ir.height + 'px';
-      navSel.style.opacity = '1';
-    });
-  });
-  mainRight.addEventListener('mouseleave', () => {
-    navSel.style.opacity = '0';
-  });
-}
 
 /* ── Nav item click ─────────────────────────────────────── */
 qsa('.p3-item').forEach(item => {
