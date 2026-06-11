@@ -355,10 +355,8 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
   margin-top:1px;
 }
 
-/* Size cascade — largest → smallest, all left-aligned */
-.p3-item:nth-child(2) .p3-label{font-size:clamp(38px,4.2vw,58px)}
-.p3-item:nth-child(3) .p3-label{font-size:clamp(30px,3.2vw,44px)}
-.p3-item:nth-child(4) .p3-label{font-size:clamp(24px,2.6vw,36px)}
+/* Uniform size — all items equal weight */
+.p3-item .p3-label{font-size:clamp(32px,3.6vw,50px)}
 
 .p3-item:hover .p3-label{
   color:var(--text);
@@ -1069,7 +1067,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
     <!-- About text -->
     <div class="mask" style="margin-bottom:18px">
       <p class="about-text lift" id="h3">
-        Banks, unicorns, startups, AI fintech. 12 years, every kind of constraint, every type of stakeholder. What I've figured out: great systems beat great ideas. I build the system: the right people, the right process, the right culture. My teams tend to stay, grow, and ship well.
+        Great systems beat great ideas. 12 years in banking, unicorns, and AI fintech. I build the system: people, process, culture. My teams stay, grow, and ship.
       </p>
     </div>
 
@@ -1141,7 +1139,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
     </div>
     <div class="p3-item" data-target="ov-projects">
       <span class="p3-label">Projects</span>
-      <span class="p3-sub">12 shipped</span>
+      <span class="p3-sub">9 shipped</span>
     </div>
   </div>
 
@@ -1249,6 +1247,20 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
             <ul class="exp-bul">
               <li>Led 6-month core banking migration to Temenos T24 and launched SOBATKU e-wallet end-to-end, covering regulatory licensing, KYC, and reconciliation.</li>
             </ul>
+          </div>
+        </div>
+
+        <div class="exp-entry ov-item">
+          <div class="arcana">
+            <div class="arc-ring"><span class="arc-num" style="font-size:11px;letter-spacing:.02em">EDU</span></div>
+            <div class="arc-name">Education</div>
+          </div>
+          <div class="exp-card">
+            <div class="exp-top">
+              <div class="exp-role">BSc (Hons), Business Administration &amp; Management</div>
+              <div class="exp-dates">2012 — 2014</div>
+            </div>
+            <div class="exp-company">University College Dublin &nbsp;·&nbsp; Dublin, Ireland</div>
           </div>
         </div>
 
@@ -1433,36 +1445,16 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
         <div class="proj-card ov-item">
           <span class="proj-ghost">05</span>
           <div class="proj-head">
-            <div><div class="proj-type">Voucher &nbsp;·&nbsp; Loyalty</div><div class="proj-name">Traveloka Eats Voucher</div></div>
+            <div><div class="proj-type">CX Automation &nbsp;·&nbsp; Cost Reduction</div><div class="proj-name">Tokopedia Support Bot</div></div>
           </div>
-          <p class="proj-desc">Traveloka users had accumulated travel credits with nowhere compelling to spend them. Restaurant dining was an underserved redemption category.</p>
-          <p class="proj-desc">Built a restaurant voucher and redemption system. Users browse deals, purchase vouchers with Traveloka credits, and redeem in-person. Slow-cycle, discovery-led product distinct from food delivery.</p>
-          <p class="proj-impact">Grew to 80,000 orders/day. Validated the food vertical before the delivery pivot.</p>
+          <p class="proj-desc">Tokopedia's support volume was large and growing. Most complaints were repeat categories: order status, refunds, seller violations. Every ticket hit a human agent.</p>
+          <p class="proj-desc">Mapped the complaint taxonomy to find categories with deterministic resolution paths. Built the conversation tree, defined escalation triggers, shipped the bot. Rebuilt Help Center search in parallel — reclassified 600 articles into a searchable hierarchy to capture the volume the bot didn't resolve. Both shipped together.</p>
+          <p class="proj-impact">33% of all complaint tickets resolved without a human. 12 billion IDR Opex cut per year.</p>
+          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Tokopedia%20Help%20Center.png" alt="Tokopedia Support Bot &amp; Help Center"></div>
         </div>
 
         <div class="proj-card ov-item">
           <span class="proj-ghost">06</span>
-          <div class="proj-head">
-            <div><div class="proj-type">CX Automation &nbsp;·&nbsp; Cost Reduction</div><div class="proj-name">Tokopedia Support Bot</div></div>
-          </div>
-          <p class="proj-desc">Tokopedia's support volume was large and growing. Most complaints were repeat categories: order status, refunds, seller violations. Every ticket hit a human agent.</p>
-          <p class="proj-desc">Mapped the complaint taxonomy to find categories with deterministic resolution paths. Built the conversation tree, defined escalation triggers, shipped the bot. Handles the full ticket flow for qualifying complaints without human involvement.</p>
-          <p class="proj-impact">33% of all complaint tickets resolved without a human. 12 billion IDR Opex cut per year.</p>
-        </div>
-
-        <div class="proj-card ov-item">
-          <span class="proj-ghost">07</span>
-          <div class="proj-head">
-            <div><div class="proj-type">CX Product &nbsp;·&nbsp; Information Architecture</div><div class="proj-name">Tokopedia Help Center</div></div>
-          </div>
-          <p class="proj-desc">Tokopedia's Help Center had 600+ articles in a flat structure users couldn't navigate. Users defaulted to tickets instead of finding answers. It was generating volume the chatbot wasn't capturing.</p>
-          <p class="proj-desc">Rebuilt with smart search and intent matching. Reclassified all 600 articles into a logical hierarchy. Ran alongside the chatbot project.</p>
-          <p class="proj-impact">Reduced low-complexity ticket volume. Combined with the bot, moved the majority of repeat issues to self-service.</p>
-          <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Tokopedia%20Help%20Center.png" alt="Tokopedia Help Center"></div>
-        </div>
-
-        <div class="proj-card ov-item">
-          <span class="proj-ghost">08</span>
           <div class="proj-head">
             <div><div class="proj-type">PropTech &nbsp;·&nbsp; B2B Platform</div><div class="proj-name">Qlue Residential</div></div>
           </div>
@@ -1473,7 +1465,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
         </div>
 
         <div class="proj-card ov-item">
-          <span class="proj-ghost">09</span>
+          <span class="proj-ghost">07</span>
           <div class="proj-head">
             <div><div class="proj-type">GovTech &nbsp;·&nbsp; Civic Infrastructure</div><div class="proj-name">Jakarta Smart City Integration</div></div>
           </div>
@@ -1487,7 +1479,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
         </div>
 
         <div class="proj-card ov-item">
-          <span class="proj-ghost">10</span>
+          <span class="proj-ghost">08</span>
           <div class="proj-head">
             <div><div class="proj-type">Fintech &nbsp;·&nbsp; Mobile &nbsp;·&nbsp; Regulatory</div><div class="proj-name">SOBATKU e-Wallet</div></div>
           </div>
@@ -1498,7 +1490,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
         </div>
 
         <div class="proj-card ov-item">
-          <span class="proj-ghost">11</span>
+          <span class="proj-ghost">09</span>
           <div class="proj-head">
             <div><div class="proj-type">Core Banking &nbsp;·&nbsp; Enterprise Migration</div><div class="proj-name">BSS · T24 CBS Replacement</div></div>
           </div>
