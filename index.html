@@ -667,7 +667,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
 }
 .proj-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0}
 .proj-arrow{ display:none }
-.proj-desc{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:16px}
+.proj-desc{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:10px}
+.proj-desc:last-of-type{margin-bottom:16px}
+.proj-impact{font-size:13px;font-weight:500;color:var(--gold);letter-spacing:.02em;margin-bottom:16px}
 .proj-tags{ display:none }
 .proj-tag{}
 /* Featured full-width */
@@ -1275,19 +1277,19 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">Product Craft</div></div>
           <div class="proofs">
             <div class="proof-item">
-              <div class="proof-marker">Strategy Before the Team Exists</div>
-              <div class="proof-skill">Roadmap, architecture, OKR — built before first PM hire</div>
-              <div class="proof-ev">At Ringkas: defined the 12-month AI product roadmap, dual-interface platform architecture, 7-phase capability migration, and OKR/KPI framework for RISA before a product team existed. Strategy that held through 3 years of growth.</div>
+              <div class="proof-marker">0 to 1 Across Unrelated Domains</div>
+              <div class="proof-skill">Multiple products built from zero across banking, food delivery, govtech, and AI fintech</div>
+              <div class="proof-ev">Ringkas LOS: enterprise mortgage infrastructure from zero to 2,000+ approved applications/month in 18 months. Traveloka Eats: food delivery from zero to 100,000 orders/day in 12 months. SOBATKU: e-wallet from zero including OJK licensing. Each required building the product, team, and process at the same time.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">Delivery Under Every Constraint</div>
-              <div class="proof-skill">Pandemic. Legacy infra. Regulated market. Still shipped.</div>
-              <div class="proof-ev">Traveloka Eats MVP in one month, full remote, pandemic. Required rebuilding payment rails, logistics, and accounting — not just features. Near-zero team turnover throughout. Ringkas RISA shipped across OJK-regulated bank integrations without compliance failure.</div>
+              <div class="proof-marker">Delivery Under Constraint</div>
+              <div class="proof-skill">Regulated market. Two-country team. Pandemic. Still shipped.</div>
+              <div class="proof-ev">Ringkas LOS: infrastructure migration across 25 active bank clients with zero compliance downtime, unlocking 7x transaction volume growth within 60 days. Traveloka Eats MVP: 30 days, full remote, mid-COVID, rebuilt payment rails and logistics from scratch.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">PRD Depth &amp; Engineering Handoff</div>
-              <div class="proof-skill">4 major PRDs with full TRD, timeline, and ticket structure</div>
-              <div class="proof-ev">RISA PRDs covered Platform Foundation, Client Management, AI Quality Evaluation, and Billing — each with full TRD task tables, three-scenario timeline estimation (Best/Expected/Worst), and engineering ticket breakdowns. Engineers could build directly from the spec.</div>
+              <div class="proof-marker">Spec Quality</div>
+              <div class="proof-skill">Product specs built for 21 engineers across two countries</div>
+              <div class="proof-ev">Authored specs for the Ringkas LOS, Customer App, and RISA NXT Config Portal. Each with full TRD task tables, three-scenario timeline estimates (Best/Expected/Worst), and ticket breakdowns by engineering workstream. Built for a team where follow-up questions are expensive.</div>
             </div>
           </div>
         </div>
@@ -1296,40 +1298,40 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">AI Product</div></div>
           <div class="proofs">
             <div class="proof-item">
-              <div class="proof-marker">Agent Design</div>
-              <div class="proof-skill">Full conversation architecture to production</div>
-              <div class="proof-ev">RISA: designed intake conversation flow from scratch — income, employment, liabilities, eligibility, documents. White-label config layer per bank partner. LangChain tool calls for doc parsing, eligibility calculation, and CRM handoff. WABA integration for WhatsApp delivery.</div>
+              <div class="proof-marker">Agent Architecture</div>
+              <div class="proof-skill">Production AI agent from conversation design to live deployment</div>
+              <div class="proof-ev">RISA: designed the full intake conversation flow, white-label config per bank, LangChain tool calls for document parsing and eligibility calculation, and WABA integration. Deployed as the AI sales conversion layer across Ringkas's client portfolio. Built in 12 months.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">Eval &amp; Quality Systems</div>
-              <div class="proof-skill">LLM-as-judge before it was standard practice</div>
-              <div class="proof-ev">Built LangSmith evaluation covering 5 dimensions: conversation quality, task completion rate, hallucination frequency, tone compliance, escalation accuracy. Real conversation dataset maintained and versioned. Failed sessions feed directly into prompt tuning loop.</div>
+              <div class="proof-marker">Eval Infrastructure</div>
+              <div class="proof-skill">5-evaluator LLM-as-judge pipeline gating every release</div>
+              <div class="proof-ev">Built on LangSmith: intent accuracy, hallucination detection, tone compliance, answer accuracy, next-step guidance. Every prompt version passes the eval pipeline before going live. Real conversation dataset versioned and maintained. Failed sessions feed directly into prompt tuning.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">AI PM Operating Model</div>
-              <div class="proof-skill">Defined how a team manages an AI product</div>
-              <div class="proof-ev">Built the full AI PM operating model at Ringkas: prompt-to-eval loop, human review cadence, agent config versioning, feedback pipeline from RISA conversations to product backlog. OKR/KPIs tied to qualification accuracy and conversion, not AI vanity metrics.</div>
+              <div class="proof-marker">AI Product Operating Model</div>
+              <div class="proof-skill">Defined how a non-AI team ships and measures an AI product</div>
+              <div class="proof-ev">Authored the Ringkas AI product operating playbook: sprint cadence for AI, skunkworks model, prompt-to-eval loop, human review cadence, A/B testing on LLM features, and shipping principles. Adopted across a team with no prior AI product experience.</div>
             </div>
           </div>
         </div>
 
         <div class="sg ov-item">
-          <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">Team &amp; Culture</div></div>
+          <div class="sg-head"><div class="sg-dia"></div><div class="sg-title">Team &amp; Leadership</div></div>
           <div class="proofs">
             <div class="proof-item">
-              <div class="proof-marker">Building Teams That Stay</div>
-              <div class="proof-skill">Near-zero turnover across every role</div>
-              <div class="proof-ev">Built an 8-person cross-functional team at Ringkas (3 PMs, 2 designers, 2 analysts, 1 data engineer) with near-zero voluntary turnover. Consistent above-expectation performance ratings from C-level. Same pattern at Traveloka Eats under pandemic and high-pressure conditions.</div>
+              <div class="proof-marker">Retention Under Pressure</div>
+              <div class="proof-skill">3 products shipped in parallel. Near-zero voluntary turnover.</div>
+              <div class="proof-ev">4 PMs, 2 designers, 21 Vietnam-based engineers (FE, BE, AI, QA, DevOps) shipping the LOS, Customer App, and RISA simultaneously. Near-zero voluntary turnover. Consistent above-expectation C-level ratings. Same retention pattern at Traveloka Eats through COVID.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">Process from Zero</div>
-              <div class="proof-skill">Defined product process when none existed</div>
-              <div class="proof-ev">At Ringkas, built all product processes from scratch: PRD format, sprint cadence, stakeholder review rhythm, roadmap cadence, data analyst handoff workflow, and engineering ticket standards. A new PM joining the team has a full operating system to work within.</div>
+              <div class="proof-marker">Product Operating Infrastructure</div>
+              <div class="proof-skill">Built the process before anyone else could</div>
+              <div class="proof-ev">At Ringkas, no product process existed when I joined. Built the full system: PRD format, sprint cadence, stakeholder review rhythm, roadmap cadence, DA handoff workflow, ticket standards. A new PM joining today inherits a working operating model, not tribal knowledge.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">Cross-Functional Leadership</div>
-              <div class="proof-skill">Led without authority across banks, engineers, and ops</div>
-              <div class="proof-ev">At Ringkas: coordinated FE, BE, data science, and 26 bank partner integrations. At Traveloka: shipped across logistics, finance, ops, and restaurant partners. At Qlue: led government and property developer relationships directly.</div>
+              <div class="proof-marker">Compliance and Regulatory Navigation</div>
+              <div class="proof-skill">Every bank passed in a single round. Zero renegotiation. 2 weeks per bank.</div>
+              <div class="proof-ev">Designed the ISO 27001 and OJK compliance architecture at Ringkas from inception. All 33 bank integrations passed security assessment in one round. Time-to-operational: 2 weeks per bank. Separately: OJK e-wallet license at BSS. Jakarta Smart City government integration at Qlue.</div>
             </div>
           </div>
         </div>
@@ -1339,18 +1341,18 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proofs">
             <div class="proof-item">
               <div class="proof-marker">Consumer Growth</div>
-              <div class="proof-skill">100x · 50% MoM · 25% sustained conversion</div>
-              <div class="proof-ev">Traveloka Eats: 1,000 to 100,000 orders/day in one year. Traveloka Dine-In: 50% monthly order growth via payment and promotion model. Upper funnel: 25% visit-to-purchase conversion sustained across cohorts — not just at launch.</div>
+              <div class="proof-skill">100x orders · 50% MoM · 25% sustained conversion</div>
+              <div class="proof-ev">Traveloka Eats: 1,000 to 100,000 orders/day in 12 months. Traveloka Dine-In: 50% monthly order growth through a restaurant-funded promotion model. Upper funnel: 25% visit-to-purchase conversion, sustained across cohorts. Not just launch numbers.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">Monetization Design</div>
-              <div class="proof-skill">Built business models, not just features</div>
-              <div class="proof-ev">Session-based WABA billing at Ringkas — replaced flat-fee pricing. Restaurant-funded promotion model at Traveloka (restaurants pay the discount, Traveloka captures the transaction). Voucher and redemption loop for Traveloka Eats Voucher. Each tied to a clear commercial logic.</div>
+              <div class="proof-marker">Revenue Architecture</div>
+              <div class="proof-skill">Designed the commercial model, not just the product</div>
+              <div class="proof-ev">At Ringkas: authored the billing model and attribution spec for the 3-tier pricing structure (setup fee + monthly subscription + 0.5% success fee on AI-attributed loan closings). The commercial framework governing all client contracts. At Traveloka: designed the restaurant-funded promotion model that became the core Dine-In monetization layer.</div>
             </div>
             <div class="proof-item">
-              <div class="proof-marker">Automation &amp; Opex</div>
+              <div class="proof-marker">Automation at Scale</div>
               <div class="proof-skill">12 billion IDR Opex cut · 33% ticket resolution</div>
-              <div class="proof-ev">Tokopedia: shipped the first self-service CX chatbot at marketplace scale. Mapped complaint taxonomy, built the conversation tree, defined escalation triggers. 33% of all tickets resolved without a human. 12B IDR cut in annual support Opex.</div>
+              <div class="proof-ev">Tokopedia: mapped complaint taxonomy to find deterministic resolution paths, built the conversation tree, defined escalation triggers. 33% of all tickets resolved without a human. 12B IDR annual Opex cut. First self-service CX automation at Tokopedia's scale.</div>
             </div>
           </div>
         </div>
@@ -1382,7 +1384,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
             <span class="proj-ghost">01</span>
             <div class="proj-type">AI Agent &nbsp;·&nbsp; Production</div>
             <div class="proj-name">RISA · Ringkas AI</div>
-            <p class="proj-desc">Indonesia's first AI mortgage assistant. RISA runs on WhatsApp and handles the full applicant intake: income, employment, liabilities, documents, eligibility. Routes qualified leads to the right bank. Built in the past 12 months: conversation architecture, LangChain orchestration, white-label config per bank partner, and a 5-evaluator LLM-as-judge pipeline (intent accuracy, hallucination detection, tone, answer accuracy, next-step guidance) that gates every prompt version before release. Live across 33 banks, achieving 15% session-to-warm-lead conversion.</p>
+            <p class="proj-desc">Getting a home loan in Indonesia means calling multiple banks, submitting the same documents, and waiting weeks to find out you don't qualify. Banks spend sales time on leads that go nowhere. Ringkas aggregates across banks but was bottlenecked on manual qualification.</p>
+            <p class="proj-desc">RISA is a WhatsApp agent that does the full intake: income, employment, liabilities, documents, eligibility. Qualifies the applicant and routes a warm lead to the right bank. LangChain backend, white-label config per bank, LLM-as-judge pipeline that vets every prompt version before it goes live. Built in the past 12 months.</p>
+            <p class="proj-impact">Deployed as Ringkas's AI sales conversion agent across bank and developer clients. Converts inbound leads into qualified applications at scale, with no proportional headcount increase.</p>
           </div>
           <img class="proj-feat-img" src="Projects/screenshots/Ringkas%20AI.png" alt="RISA · Ringkas AI">
         </div>
@@ -1392,7 +1396,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">Platform Design</div><div class="proj-name">Ringkas Platform</div></div>
           </div>
-          <p class="proj-desc">Designed the platform split: internal ops tool vs. client self-serve portal. Built the 7-phase capability migration map, role-based permission model, and session-based WABA billing. The architecture that lets bank partners onboard and configure without Ringkas ops intervention.</p>
+          <p class="proj-desc">Indonesian banks sell mortgages through human-led processes: manual data collection, document review, multi-round bank submissions. No standardized digital infrastructure for the full origination cycle existed.</p>
+          <p class="proj-desc">Built the Ringkas LOS and Customer App from zero. The LOS connects banks on the backend via individual API integrations, handles the full application lifecycle (eligibility, document collection, bank submission, disbursement tracking), and enforces compliance rules per bank. The Customer App is the borrower-facing interface. Enterprise-grade: ISO 27001 certified, OJK compliant. Every bank integration passed security assessment in a single round.</p>
+          <p class="proj-impact">2,000+ approved applications/month. 33 banks, 10 property developers. Most of the mortgage disbursement volume for our major clients now runs through this platform.</p>
           <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Ringkas%20App.png" alt="Ringkas Platform"></div>
         </div>
 
@@ -1401,7 +1407,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">Growth Product &nbsp;·&nbsp; Platform Rebuild</div><div class="proj-name">Traveloka Online Food Delivery</div></div>
           </div>
-          <p class="proj-desc">100x in one year: 1,000 to 100,000 orders/day. Traveloka's core systems ran on travel booking cadence. Food delivery runs on minutes. Rebuilt the order flow, payment/payout rails, logistics integration, and accounting model from scratch. Shipped the MVP in one month, pandemic, full remote.</p>
+          <p class="proj-desc">Indonesian food delivery was growing fast. Traveloka had no play in it. The existing platform ran on travel booking cadence. Transactions settled in days. Food delivery settles in minutes. The infra to support it didn't exist.</p>
+          <p class="proj-desc">Pivoted from dine-in QR payments to food delivery in 30 days, mid-pandemic, full remote. Scope cut to 3 core flows to ship fast. Rebuilt order flow, payment rails, logistics integration, and accounting from scratch on top of a platform never built for this.</p>
+          <p class="proj-impact">1,000 to 100,000 orders/day in 12 months.</p>
           <div class="proj-img-wrap">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Food%20Delivery-1.png" alt="Traveloka Food Delivery">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Food%20Delivery-2.png" alt="Traveloka Food Delivery">
@@ -1413,7 +1421,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">Marketplace &nbsp;·&nbsp; Monetization</div><div class="proj-name">Traveloka Dine-In</div></div>
           </div>
-          <p class="proj-desc">Brought payment in-app for Traveloka's dine-in product. Combined TravelokaPay digital wallet with restaurant-funded promotions: restaurants pay the discount, Traveloka captures the transaction. Designed the partner onboarding flow, discount cap config, and reporting dashboard.</p>
+          <p class="proj-desc">Traveloka had restaurant discovery but no in-restaurant payment. Transactions happened offline. No incentive layer to drive browse-to-visit conversion.</p>
+          <p class="proj-desc">Brought payment in-app with TravelokaPay. Layered on a restaurant-funded promotion model: restaurants pay the discount, Traveloka captures the transaction. Built partner onboarding flow, discount cap config, and merchant reporting dashboard.</p>
+          <p class="proj-impact">50% monthly order growth after launch.</p>
           <div class="proj-img-wrap">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Dine%20in-1.png" alt="Traveloka Dine-In">
             <img class="proj-img" src="Projects/screenshots/Traveloka%20Dine%20in-2.png" alt="Traveloka Dine-In">
@@ -1425,7 +1435,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">Voucher &nbsp;·&nbsp; Loyalty</div><div class="proj-name">Traveloka Eats Voucher</div></div>
           </div>
-          <p class="proj-desc">Traveloka's original food product: a restaurant voucher and redemption system letting users spend Traveloka credits on dining. Slow-cycle discovery and redemption loop, distinct from the food delivery pivot.</p>
+          <p class="proj-desc">Traveloka users had accumulated travel credits with nowhere compelling to spend them. Restaurant dining was an underserved redemption category.</p>
+          <p class="proj-desc">Built a restaurant voucher and redemption system. Users browse deals, purchase vouchers with Traveloka credits, and redeem in-person. Slow-cycle, discovery-led product distinct from food delivery.</p>
+          <p class="proj-impact">Grew to 80,000 orders/day. Validated the food vertical before the delivery pivot.</p>
         </div>
 
         <div class="proj-card ov-item">
@@ -1433,7 +1445,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">CX Automation &nbsp;·&nbsp; Cost Reduction</div><div class="proj-name">Tokopedia Support Bot</div></div>
           </div>
-          <p class="proj-desc">12 billion IDR Opex cut. Mapped Tokopedia's complaint taxonomy to find which ticket categories had deterministic resolution paths, built the conversation tree, defined escalation triggers, and shipped the bot. Resolves 33% of all customer complaint tickets without a human.</p>
+          <p class="proj-desc">Tokopedia's support volume was large and growing. Most complaints were repeat categories: order status, refunds, seller violations. Every ticket hit a human agent.</p>
+          <p class="proj-desc">Mapped the complaint taxonomy to find categories with deterministic resolution paths. Built the conversation tree, defined escalation triggers, shipped the bot. Handles the full ticket flow for qualifying complaints without human involvement.</p>
+          <p class="proj-impact">33% of all complaint tickets resolved without a human. 12 billion IDR Opex cut per year.</p>
         </div>
 
         <div class="proj-card ov-item">
@@ -1441,7 +1455,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">CX Product &nbsp;·&nbsp; Information Architecture</div><div class="proj-name">Tokopedia Help Center</div></div>
           </div>
-          <p class="proj-desc">600+ articles in a flat structure users couldn't navigate. Introduced smart search with intent matching, reclassified all 600 articles into a logical hierarchy with consistent naming. Ran alongside the chatbot — together moved the majority of low-complexity tickets to self-service.</p>
+          <p class="proj-desc">Tokopedia's Help Center had 600+ articles in a flat structure users couldn't navigate. Users defaulted to tickets instead of finding answers. It was generating volume the chatbot wasn't capturing.</p>
+          <p class="proj-desc">Rebuilt with smart search and intent matching. Reclassified all 600 articles into a logical hierarchy. Ran alongside the chatbot project.</p>
+          <p class="proj-impact">Reduced low-complexity ticket volume. Combined with the bot, moved the majority of repeat issues to self-service.</p>
           <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Tokopedia%20Help%20Center.png" alt="Tokopedia Help Center"></div>
         </div>
 
@@ -1450,7 +1466,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">PropTech &nbsp;·&nbsp; B2B Platform</div><div class="proj-name">Qlue Residential</div></div>
           </div>
-          <p class="proj-desc">White-label residential management platform for property developers. Configurable modules for maintenance requests, visitor management, billing, and resident announcements. Secured contracts with 4 major developers.</p>
+          <p class="proj-desc">Property developers managing residential complexes ran operations manually: maintenance requests, visitor logs, billing, announcements. No unified platform existed.</p>
+          <p class="proj-desc">Built a white-label residential management platform. Configurable modules per developer, each gets a branded instance. Built demo environments and ran client presentations directly.</p>
+          <p class="proj-impact">4 major property developer contracts secured.</p>
           <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Qlue%20Residential%20App.png" alt="Qlue Residential"></div>
         </div>
 
@@ -1459,7 +1477,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">GovTech &nbsp;·&nbsp; Civic Infrastructure</div><div class="proj-name">Jakarta Smart City Integration</div></div>
           </div>
-          <p class="proj-desc">Integrated the Qlue citizen app with Jakarta Smart City's government ops dashboard. Citizen infrastructure reports sync in real time to city officers, tagged by district, category, and severity. Scaled to 500,000 users and 9,000 reports/day citywide.</p>
+          <p class="proj-desc">Jakarta government officers had no real-time visibility into citizen infrastructure reports. Reports came through fragmented channels. Officers couldn't track, assign, or resolve issues at city scale.</p>
+          <p class="proj-desc">Integrated the Qlue citizen reporting app with Jakarta Smart City's government ops dashboard. Reports sync in real time, tagged by district, category, and severity.</p>
+          <p class="proj-impact">Scaled to 500,000 users and 9,000 reports/day citywide.</p>
           <div class="proj-img-wrap">
             <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-1.png" alt="Jakarta Smart City">
             <img class="proj-img" src="Projects/screenshots/Qlue%20Jakarta%20App-2.png" alt="Jakarta Smart City">
@@ -1471,7 +1491,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">Fintech &nbsp;·&nbsp; Mobile &nbsp;·&nbsp; Regulatory</div><div class="proj-name">SOBATKU e-Wallet</div></div>
           </div>
-          <p class="proj-desc">IT Project Manager for Bank Sahabat Sampoerna's e-wallet mobile app launch. Coordinated across business (product scope), legal (OJK e-wallet license process), and operations (KYC design, reconciliation). BSS's first move into digital payments.</p>
+          <p class="proj-desc">Bank Sahabat Sampoerna had no digital payments product. e-wallet players were taking market share. BSS needed to launch before the window closed and faced OJK licensing requirements with no existing mobile infrastructure.</p>
+          <p class="proj-desc">Led the launch as IT Project Manager. Coordinated business (product scope), legal (OJK e-wallet license), and operations (KYC, reconciliation) from kickstart to launch.</p>
+          <p class="proj-impact">SOBATKU launched as BSS's first e-wallet. OJK license secured.</p>
           <div class="proj-img-wrap"><img class="proj-img" src="Projects/screenshots/Sobatku%20bank%20sahabat%20sampoerna.png" alt="SOBATKU e-Wallet"></div>
         </div>
 
@@ -1480,7 +1502,9 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em}
           <div class="proj-head">
             <div><div class="proj-type">Core Banking &nbsp;·&nbsp; Enterprise Migration</div><div class="proj-name">BSS · T24 CBS Replacement</div></div>
           </div>
-          <p class="proj-desc">Full core banking system replacement at Bank Sahabat Sampoerna: Alphabits to Temenos T24. Acted as BA, tester, PM, and trainer across the Funding Module. Delivered Time Deposit data migration with zero data integrity issues. Managed 61 change requests under SDLC.</p>
+          <p class="proj-desc">Bank Sahabat Sampoerna was running on an aging core banking system that couldn't support the bank's growth. The replacement had to be executed with zero data loss across a live banking operation.</p>
+          <p class="proj-desc">Acted as BA, tester, PM, and trainer across the migration to Temenos T24. Owned the Funding Module. Managed 61 change requests under SDLC. Co-led customer communication through the cutover.</p>
+          <p class="proj-impact">Zero data integrity issues on Time Deposit migration. No compliance incidents.</p>
         </div>
 
       </div>
